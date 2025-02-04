@@ -1,8 +1,8 @@
 using UnityEngine;
+using UnityEngine.Events;
 
 public class Player : MonoBehaviour
 {
-    [SerializeField] private int numberOfLives = 3;
 
     [SerializeField] private Bullet bulletPrefab;
     [SerializeField] private Transform shootAt;
@@ -18,6 +18,14 @@ public class Player : MonoBehaviour
     [SerializeField] private AnimationCurve accelerationCurve = AnimationCurve.EaseInOut(0f, 0f, 1f, 1f);
 
     private float velocity;
+
+
+    #region Player life
+    [Header("Player life")]
+    [SerializeField, Min(0f)] private int numberOfLives = 3;
+    public UnityEvent onFirstLifeLost;
+    public UnityEvent onSecondLifeLost;
+    #endregion
 
     void Update()
     {
@@ -77,9 +85,19 @@ public class Player : MonoBehaviour
     private void CheckLives()
     {
         numberOfLives--;
-        if (numberOfLives <= 0)
+        switch(numberOfLives)
         {
-            GameManager.Instance.PlayGameOver();
+            case 2:
+                onFirstLifeLost?.Invoke();
+                break;
+            case 1:
+                onSecondLifeLost?.Invoke();
+                break;
+            case 0:
+            default:
+                GameManager.Instance.PlayGameOver();
+                break;
+
         }
     }
 }
