@@ -1,18 +1,21 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    [SerializeField] private float deadzone = 0.3f;
-    [SerializeField] private float speed = 1f;
-
-    [SerializeField] private Bullet bulletPrefab = null;
-    [SerializeField] private Transform shootAt = null;
+    [SerializeField] private Bullet bulletPrefab;
+    [SerializeField] private Transform shootAt;
     [SerializeField] private float shootCooldown = 1f;
     [SerializeField] private string collideWithTag = "Untagged";
 
     private float lastShootTimestamp = Mathf.NegativeInfinity;
+    
+    [Header("Movement parameters")]
+    [SerializeField, Min(0f)] private float maxVelocity = 3;
+    [SerializeField, Min(0f)] private float acceleration = 1f;
+    [SerializeField, Range(0f, 1f)] private float decelerationRate = .95f;
+    [SerializeField] private AnimationCurve accelerationCurve = AnimationCurve.EaseInOut(0f, 0f, 1f, 1f);
+
+    private float velocity;
 
     void Update()
     {
@@ -22,18 +25,33 @@ public class Player : MonoBehaviour
 
     void UpdateMovement()
     {
-        float move = Input.GetAxis("Horizontal");
-        if (Mathf.Abs(move) < deadzone) { return; }
+        float TrueSign(float value)
+        {
+            return value == 0 ? 0 : value > 0 ? 1 : -1; 
+        } 
+        float moveDir = TrueSign(Input.GetAxis("Horizontal"));
+        if (moveDir == 0)
+        {
+            velocity *= decelerationRate;
+        }
+        else
+        {
+            velocity = Mathf.Clamp(velocity + moveDir * acceleration * Time.deltaTime, -maxVelocity, maxVelocity);
+        }
 
-        move = Mathf.Sign(move);
-        float delta = move * speed * Time.deltaTime;
-        transform.position = GameManager.Instance.KeepInBounds(transform.position + Vector3.right * delta);
+        Vector3 newPos = GameManager.Instance.KeepInBounds(transform.position + Vector3.right * velocity);
+        if (Mathf.Abs(transform.position.x - newPos.x) < Mathf.Epsilon)
+        {
+            velocity = 0;
+        }
+        transform.position = newPos;
     }
+
 
     void UpdateActions()
     {
-        if (    Input.GetKey(KeyCode.Space) 
-            &&  Time.time > lastShootTimestamp + shootCooldown )
+        if (Input.GetKey(KeyCode.Space) 
+            && Time.time > lastShootTimestamp + shootCooldown )
         {
             Shoot();
         }
@@ -47,8 +65,9 @@ public class Player : MonoBehaviour
 
     public void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.tag != collideWithTag) { return; }
+        if (!collision.gameObject.CompareTag(collideWithTag)) return;
 
+        velocity = 0f;
         GameManager.Instance.PlayGameOver();
     }
 }
