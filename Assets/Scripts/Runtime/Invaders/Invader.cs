@@ -9,7 +9,7 @@ public class Invader : MonoBehaviour
     [SerializeField] private Transform shootAt = null;
     [SerializeField] private string collideWithTag = "Player";
 
-    internal Action<Invader> onDestroy;
+    public static Action<Invader> onDestroy;
 
     public Vector2Int GridIndex { get; private set; }
 
