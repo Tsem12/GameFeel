@@ -154,6 +154,7 @@ public class Wave : MonoBehaviour
                         delta -= (distance - downStep);
                         BeginNextMove();
                     }
+                    invaders.ForEach(invader => invader.OnLineChanged?.Invoke());
                     break;
                 }
         }
