@@ -12,3 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f563f740b42eeb049804b2f12c897374, type: 3}
   m_Name: Multipliers
   m_EditorClassIdentifier: 
+  multipliers:
+  - cumulativeScore: 1
+    multiplier: 1
+  - cumulativeScore: 20
+    multiplier: 2
+  - cumulativeScore: 50
+    multiplier: 4
+  - cumulativeScore: 70
+    multiplier: 8

@@ -1,42 +1,52 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class ScoreManager : MonoBehaviour
 {
 
     [SerializeField] private int _score;
+    [SerializeField] private TextMeshProUGUI _scoreText;
     public int Score => _score;
     public static Action<int> onScoreChange;
+    [SerializeField] private int _pointPerInvader;
 
     #region Multplier
-    [SerializeField] private Multipliers _multipliers;
-    [SerializeField] private int _currentMultiplierIndex;
-
+    [SerializeField] private TextMeshProUGUI _multiplierText;
     private bool _isMultiplierActive = false;
 
-    [SerializeField] private int _multiplier;
-    public int Multiplier => _multiplier;
+    [SerializeField] private Multipliers _multipliersScriptable;
+    [SerializeField] private int _currentMultiplierIndex;
 
+    public static Action<Multipliers.Multiplier> onMultiplierChange;
     [SerializeField] private float _multiplierDuration;
-    public float MultiplierDuration => _multiplierDuration;
 
     private float _multiplierTimer;
     private float _cumulativeScoreMultiplier;
+
+    public int Multiplier => _multipliersScriptable.multipliers[_currentMultiplierIndex].multiplier;
+    public float MultiplierDuration => _multiplierDuration;
 
     #endregion
 
     private void Reset()
     {
         _multiplierDuration = 5f;
+        _pointPerInvader = 1;
     }
 
     private void Awake()
     {
         _score = 0;
         _multiplierTimer = 0f;
-        _multiplier = 1;
+    }
+
+    private void Start()
+    {
+        UpdateTextScore();
+        UpdateTextMultiplier();
     }
 
     // Update is called once per frame
@@ -51,7 +61,7 @@ public class ScoreManager : MonoBehaviour
         }
         else
         {
-            if(_multiplier > 1)
+            if(Multiplier > 1)
             {
                 DecreaseMultiplier();
                 _multiplierTimer = _multiplierDuration;
@@ -76,22 +86,27 @@ public class ScoreManager : MonoBehaviour
 
     private void DestroyedInvader(Invader invader)
     {
-        AddScore(1);
+        AddScore(_pointPerInvader);
+        _cumulativeScoreMultiplier++;
         _multiplierTimer = _multiplierDuration;
         _isMultiplierActive = true;
         IncreaseMultiplier();
+
+        if (_multiplierText != null)
+            _multiplierText.text = "x" + Multiplier.ToString();
     }
 
     private void IncreaseMultiplier()
     {
-        if (_cumulativeScoreMultiplier > _multipliers.multipliers[_currentMultiplierIndex].cumulativeScore)
+        if (_cumulativeScoreMultiplier > _multipliersScriptable.multipliers[_currentMultiplierIndex].cumulativeScore)
         {
-            if ((_currentMultiplierIndex + 1) >= _multipliers.multipliers.Count)
+            if ((_currentMultiplierIndex + 1) >= _multipliersScriptable.multipliers.Count)
                 return;
 
             _currentMultiplierIndex++;
-            _multiplier = (int)_multipliers.multipliers[_currentMultiplierIndex].multiplier;
+            onMultiplierChange?.Invoke(_multipliersScriptable.multipliers[_currentMultiplierIndex]);
         }
+        UpdateTextMultiplier();
     }
 
     private void DecreaseMultiplier()
@@ -99,15 +114,28 @@ public class ScoreManager : MonoBehaviour
         if (_currentMultiplierIndex > 0)
         {
             _currentMultiplierIndex--;
-            _multiplier = (int)_multipliers.multipliers[_currentMultiplierIndex].multiplier;
             _cumulativeScoreMultiplier = 0;
         }
+
+        UpdateTextMultiplier();
     }
 
     public void AddScore(int value)
     {
-        _score += value * _multiplier;
+        _score += value * Multiplier;
         onScoreChange?.Invoke(_score);
-        _cumulativeScoreMultiplier += 1;
+        UpdateTextScore();
+
+    }
+
+    private void UpdateTextScore()
+    {
+        if (_scoreText != null)
+            _scoreText.text = _score.ToString();
+    } 
+    private void UpdateTextMultiplier()
+    {
+        if (_multiplierText != null)
+            _multiplierText.text = "x" + Multiplier.ToString();
     }
 }

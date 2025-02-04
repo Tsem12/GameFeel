@@ -9,7 +9,7 @@ public class Multipliers : ScriptableObject
     public struct Multiplier
     {
         public int cumulativeScore;
-        public float multiplier;
+        public int multiplier;
     }
 
     public List<Multiplier> multipliers;
