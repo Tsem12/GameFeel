@@ -10,12 +10,12 @@ public class Player : MonoBehaviour
     private float lastShootTimestamp = Mathf.NegativeInfinity;
     
     [Header("Movement parameters")]
-    [SerializeField, Min(0f)] private float maxVelocity = 3;
+    [SerializeField, Min(0.01f)] private float maxVelocity = 3;
     [SerializeField, Min(0f)] private float acceleration = 1f;
-    [SerializeField, Range(0f, 1f)] private float decelerationRate = .95f;
     [SerializeField] private AnimationCurve accelerationCurve = AnimationCurve.EaseInOut(0f, 0f, 1f, 1f);
 
     private float velocity;
+    private float velocityProgress;
 
     void Update()
     {
@@ -25,19 +25,24 @@ public class Player : MonoBehaviour
 
     void UpdateMovement()
     {
-        float TrueSign(float value)
+        int TrueSign(float value)
         {
-            return value == 0 ? 0 : value > 0 ? 1 : -1; 
-        } 
-        float moveDir = TrueSign(Input.GetAxis("Horizontal"));
-        if (moveDir == 0)
+            return value == 0 ? 0 : value > 0 ? 1 : -1;
+        }
+        int moveDir = TrueSign(Input.GetAxis("Horizontal"));
+        int velocitySign = TrueSign(velocity);
+        if (moveDir == 0 || (moveDir != velocitySign && velocity != 0))
         {
-            velocity *= decelerationRate;
+            // Decelerate
+            velocityProgress = accelerationCurve.Evaluate(Mathf.Clamp(velocityProgress - acceleration * Time.deltaTime, 0, 1));
         }
         else
         {
-            velocity = Mathf.Clamp(velocity + moveDir * acceleration * Time.deltaTime, -maxVelocity, maxVelocity);
+            // Accelerate
+            velocityProgress = accelerationCurve.Evaluate(Mathf.Clamp(velocityProgress + acceleration * Time.deltaTime, 0, 1)) * moveDir;
         }
+
+        velocity = velocityProgress * maxVelocity;
 
         Vector3 newPos = GameManager.Instance.KeepInBounds(transform.position + Vector3.right * velocity);
         if (Mathf.Abs(transform.position.x - newPos.x) < Mathf.Epsilon)
