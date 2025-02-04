@@ -94,7 +94,7 @@ public class Wave : MonoBehaviour
     private void UpdateShoot()
     {
         shootCooldown -= Time.deltaTime;
-        if (shootCooldown > 0) { return; }
+        if (shootCooldown > 0) return;
 
         // Shoot rate depends on remaining invaders ratio
         float t = 1f - (invaders.Count - 1) / (float)((rows * columns) - 1);
@@ -102,6 +102,7 @@ public class Wave : MonoBehaviour
 
         // One column is selected to shoot a bullet. Only the invader at the bottom of that column can shoot.
         int columnIndex = Random.Range(0, invaderPerColumn.Count);
+        if (invaders.Count <= 0) return;
         invaderPerColumn[columnIndex].invaders[0].Shoot();
 
         shootCooldown += Random.Range(shootRandom.x, shootRandom.y);
@@ -109,7 +110,7 @@ public class Wave : MonoBehaviour
 
     void UpdateMovement()
     {
-        if(invaders.Count <= 0) { return; }
+        if (invaders.Count <= 0) return; 
 
         // Speed depends on remaining invaders ratio
         float t = 1f - (invaders.Count - 1) / (float)((rows * columns) - 1);
