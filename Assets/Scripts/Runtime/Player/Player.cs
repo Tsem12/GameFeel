@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+    [SerializeField] private int numberOfLives = 3;
+
     [SerializeField] private Bullet bulletPrefab;
     [SerializeField] private Transform shootAt;
     [SerializeField] private float shootCooldown = 1f;
@@ -66,8 +68,18 @@ public class Player : MonoBehaviour
     public void OnTriggerEnter2D(Collider2D collision)
     {
         if (!collision.gameObject.CompareTag(collideWithTag)) return;
+        Destroy(collision.gameObject);
 
         velocity = 0f;
-        GameManager.Instance.PlayGameOver();
+        CheckLives();
+    }
+
+    private void CheckLives()
+    {
+        numberOfLives--;
+        if (numberOfLives <= 0)
+        {
+            GameManager.Instance.PlayGameOver();
+        }
     }
 }
