@@ -1,15 +1,16 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using MoreMountains.Feedbacks;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class Invader : MonoBehaviour
 {
     [SerializeField] private Bullet bulletPrefab = null;
     [SerializeField] private Transform shootAt = null;
     [SerializeField] private string collideWithTag = "Player";
-    [SerializeField] private MMF_Player _deathEffect;
+    
+    [SerializeField] public UnityEvent OnDeath;
+    [SerializeField] public UnityEvent OnSoot;
+    [SerializeField] public UnityEvent OnLineChanged;
 
     public static Action<Invader> onDestroy;
 
@@ -29,13 +30,14 @@ public class Invader : MonoBehaviour
     {
         if(collision.gameObject.tag != collideWithTag) { return; }
 
-        _deathEffect.PlayFeedbacks();
+        OnDeath?.Invoke();
         Destroy(collision.gameObject);
     }
 
     public void Shoot()
     {
         Instantiate(bulletPrefab, shootAt.position, Quaternion.identity);
+        OnSoot?.Invoke();
     }
 
     public void ClearInvader()
