@@ -71,7 +71,7 @@ public class GameManager : MonoBehaviour
     public void PlayGameOver()
     {
         Debug.Log("Game Over");
-        Time.timeScale = 0f;
+        //Time.timeScale = 0f;
     }
 
     public void OnDrawGizmos()
