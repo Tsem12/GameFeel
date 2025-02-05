@@ -353,6 +353,9 @@ public class Player : MonoBehaviour
         [SerializeField] private AnimationCurve dashCurve = AnimationCurve.EaseInOut(0f, 0f, 1f, 1f);
         [SerializeField, Min(1f)] private float dashSpeedMultiplier;
 
+        [SerializeField] private UnityEvent onDashStart;
+        [SerializeField] private UnityEvent onDashEnd;
+
         private float timerCount;
         private float startMoveDir;
         
@@ -371,6 +374,7 @@ public class Player : MonoBehaviour
             timerCount = 0;
             startMoveDir = _stateMachine.MoveDir;
             _player.IsInvicible = true;
+            onDashStart?.Invoke();
         }
 
         public override void StopState(PlayerMovementStateType nextState)
@@ -379,6 +383,7 @@ public class Player : MonoBehaviour
             _stateMachine.XValue = _stateMachine.MoveDir;
             _player.IsInvicible = false;
             _stateMachine.ResetDashCooldown();
+            onDashEnd?.Invoke();
         }
     }
 }
