@@ -11,6 +11,7 @@ public class Player : MonoBehaviour
     [SerializeField] private string collideWithTag = "Untagged";
 
     private float lastShootTimestamp = Mathf.NegativeInfinity;
+    public bool IsInvicible { get; set; }
     
     [Header("Movement parameters")]
     [SerializeField] private PlayerMovementStateMachine playerMovementStateMachine;
@@ -26,8 +27,6 @@ public class Player : MonoBehaviour
     {
         playerMovementStateMachine.Initialize(this);
     }
-
-
 
     void Update()
     {
@@ -58,7 +57,7 @@ public class Player : MonoBehaviour
 
     public void OnTriggerEnter2D(Collider2D collision)
     {
-        if (!collision.gameObject.CompareTag(collideWithTag)) return;
+        if (!collision.gameObject.CompareTag(collideWithTag) || IsInvicible) return;
         Destroy(collision.gameObject);
 
         CheckLives();
@@ -75,7 +74,6 @@ public class Player : MonoBehaviour
             case 1:
                 onSecondLifeLost?.Invoke();
                 break;
-            case 0:
             default:
                 GameManager.Instance.PlayGameOver();
                 break;
@@ -95,6 +93,7 @@ public class Player : MonoBehaviour
         Accelerating,
         Decelerating,
         TurningBack,
+        Dashing,
     }
     
     private void OnGUI()
@@ -110,21 +109,28 @@ public class Player : MonoBehaviour
     {
         private Player _player;
         
+        [Header("Movement parameters")]
         [SerializeField] private float velocityMultiplier;
         [SerializeField] private float maxRotationangle;
+        [SerializeField, Min(0f)] private float dashCooldown;
         
+        [Header("States parameters")]
         [SerializeField] private IdleMovementState idleState;
         [SerializeField] private AcceleratingMovementState acceleratingState;
         [SerializeField] private DeceleratingMovementState deceleratingState;
         [SerializeField] private TurningBackMovementState turningBackState;
+        [SerializeField] private DashingMovementState dashingState;
         
         public PlayerMovementStateType CurrentStateType { get; private set; }
         public PlayerMovementState CurrentState => GetState(CurrentStateType);
         
         public int MoveDir { get; private set; }
+        public bool IsDashing { get; private set; }
         public float Velocity { get; set; }
         public float XValue { get; set; }
 
+        private float currentDashCooldown;
+        
         public void Initialize(Player player)
         {
             _player = player;
@@ -132,6 +138,7 @@ public class Player : MonoBehaviour
             acceleratingState.Init(this, player);
             deceleratingState.Init(this, player);
             turningBackState.Init(this, player);
+            dashingState.Init(this, player);
             CurrentStateType = PlayerMovementStateType.Idle;
             CurrentState.StartState(PlayerMovementStateType.Idle);
         }
@@ -139,10 +146,15 @@ public class Player : MonoBehaviour
         public void Update(float deltaTime)
         {
             MoveDir = Sign(Input.GetAxis("Horizontal"));
+            IsDashing = Input.GetKeyDown(KeyCode.W) && currentDashCooldown <= 0;
+            if (currentDashCooldown > 0)
+            {
+                currentDashCooldown -= deltaTime;
+            }
             CurrentState?.Update(deltaTime);
+            _player.transform.rotation = Quaternion.Euler(0f, XValue * Sign(Velocity) * maxRotationangle, 0f);
             Vector3 newPos = GameManager.Instance.KeepInBounds(_player.transform.position
                                                                + Vector3.right * (Velocity * velocityMultiplier * deltaTime));
-            _player.transform.rotation = Quaternion.Euler(0f, XValue * Sign(Velocity) * maxRotationangle, 0f);
             if (Mathf.Abs(_player.transform.position.x - newPos.x) < Mathf.Epsilon)
             {
                 Velocity = 0;
@@ -167,8 +179,14 @@ public class Player : MonoBehaviour
                 PlayerMovementStateType.Accelerating => acceleratingState,
                 PlayerMovementStateType.Decelerating => deceleratingState,
                 PlayerMovementStateType.TurningBack => turningBackState,
+                PlayerMovementStateType.Dashing => dashingState,
                 _ => idleState,
             };
+        }
+
+        public void ResetDashCooldown()
+        {
+            currentDashCooldown = dashCooldown;
         }
     }
     
@@ -199,7 +217,11 @@ public class Player : MonoBehaviour
     {
         public override void Update(float deltaTime)
         {
-            if (_stateMachine.MoveDir != 0)
+            if (_stateMachine.IsDashing)
+            {
+                _stateMachine.ChangeState(PlayerMovementStateType.Dashing);
+            }
+            else if (_stateMachine.MoveDir != 0)
             {
                 _stateMachine.ChangeState(PlayerMovementStateType.Accelerating);
             }
@@ -223,7 +245,11 @@ public class Player : MonoBehaviour
         public override void Update(float deltaTime)
         {
             base.Update(deltaTime);
-            if (_stateMachine.MoveDir == 0)
+            if (_stateMachine.IsDashing)
+            {
+                _stateMachine.ChangeState(PlayerMovementStateType.Dashing);
+            }
+            else if (_stateMachine.MoveDir == 0)
             {
                 _stateMachine.ChangeState(Mathf.Abs(_stateMachine.Velocity) > 0 ?
                     PlayerMovementStateType.Decelerating : PlayerMovementStateType.Idle);
@@ -255,11 +281,14 @@ public class Player : MonoBehaviour
         public override void Update(float deltaTime)
         {
             base.Update(-deltaTime);
-            if (_stateMachine.MoveDir != 0)
+            if (_stateMachine.IsDashing)
+            {
+                _stateMachine.ChangeState(PlayerMovementStateType.Dashing);
+            }
+            else if (_stateMachine.MoveDir != 0)
             {
                 _stateMachine.ChangeState(_stateMachine.MoveDir != Sign(_stateMachine.Velocity) ?
                     PlayerMovementStateType.TurningBack : PlayerMovementStateType.Accelerating);
-                // _stateMachine.ChangeState(PlayerMovementStateType.Accelerating);
             }
             else if (_stateMachine.XValue < Mathf.Epsilon)
             {
@@ -288,7 +317,11 @@ public class Player : MonoBehaviour
         public override void Update(float deltaTime)
         {
             base.Update(-deltaTime);
-            if (_stateMachine.MoveDir == 0)
+            if (_stateMachine.IsDashing)
+            {
+                _stateMachine.ChangeState(PlayerMovementStateType.Dashing);
+            }
+            else if (_stateMachine.MoveDir == 0)
             {
                 _stateMachine.ChangeState(Mathf.Abs(_stateMachine.Velocity) > 0 ?
                     PlayerMovementStateType.Decelerating : PlayerMovementStateType.Idle);
@@ -311,6 +344,41 @@ public class Player : MonoBehaviour
         public override void StopState(PlayerMovementStateType nextState)
         {
             _stateMachine.Velocity = 0f;
+        }
+    }
+    
+    [Serializable]
+    private class DashingMovementState : PlayerMovementState
+    {
+        [SerializeField] private AnimationCurve dashCurve = AnimationCurve.EaseInOut(0f, 0f, 1f, 1f);
+        [SerializeField, Min(1f)] private float dashSpeedMultiplier;
+
+        private float timerCount;
+        private float startMoveDir;
+        
+        public override void Update(float deltaTime)
+        {
+            timerCount += deltaTime * ( 1f / durationTime);
+            _stateMachine.Velocity = (1 + dashCurve.Evaluate(timerCount) * dashSpeedMultiplier) * startMoveDir;
+            if (timerCount >= 1f)
+            {
+                _stateMachine.ChangeState(PlayerMovementStateType.Accelerating);
+            }
+        }
+
+        public override void StartState(PlayerMovementStateType previousState)
+        {
+            timerCount = 0;
+            startMoveDir = _stateMachine.MoveDir;
+            _player.IsInvicible = true;
+        }
+
+        public override void StopState(PlayerMovementStateType nextState)
+        {
+            _stateMachine.Velocity = 1f;
+            _stateMachine.XValue = _stateMachine.MoveDir;
+            _player.IsInvicible = false;
+            _stateMachine.ResetDashCooldown();
         }
     }
 }
