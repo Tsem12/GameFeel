@@ -7,16 +7,18 @@ public class Invader : MonoBehaviour
     [SerializeField] private Bullet bulletPrefab = null;
     [SerializeField] private Transform shootAt = null;
     [SerializeField] private string collideWithTag = "Player";
+    [SerializeField] private Collider2D _collider;
+    [SerializeField] private Rigidbody2D _rb;
     [SerializeField] private int maxLife;
     private int currentLife;
+    private bool _isDead;
 
     [SerializeField] public UnityEvent OnDeath;
     [SerializeField] public UnityEvent OnSoot;
     [SerializeField] public UnityEvent OnLineChanged;
     [SerializeField] public UnityEvent OnTakeDamage;
 
-
-    public static Action<Invader> onDestroy;
+    public static Action<Invader> OnDeathAction;
 
     public Vector2Int GridIndex { get; private set; }
 
@@ -32,7 +34,7 @@ public class Invader : MonoBehaviour
 
     public void OnDestroy()
     {
-        onDestroy?.Invoke(this);
+        OnDeathAction?.Invoke(this);
     }
 
     public void OnTriggerEnter2D(Collider2D collision)
@@ -42,13 +44,24 @@ public class Invader : MonoBehaviour
 
         if (--currentLife <= 0)
         {
-            Debug.Log("Deadmdrrr");
+            _collider.enabled = false;
+            transform.parent = null;
+            _rb.bodyType = RigidbodyType2D.Dynamic;
+            OnDeathAction?.Invoke(this);
             OnDeath?.Invoke(); //gamefeel
+            _isDead = true;
         }
         else
         {
             OnTakeDamage?.Invoke();    
         }
+    }
+
+    public void OnMoveDown()
+    {
+        if(_isDead)
+            return;
+        OnLineChanged?.Invoke();
     }
 
     public void Shoot()
