@@ -67,7 +67,7 @@ public class Player : MonoBehaviour
     
     public static int Sign(float value)
     {
-        return value == 0 ? 0 : value > 0 ? 1 : -1;
+        return (Mathf.Abs(value) < Mathf.Epsilon) ? 0 : (value > 0 ? 1 : -1);
     }
     
     public enum PlayerMovementStateType
@@ -78,12 +78,21 @@ public class Player : MonoBehaviour
         TurningBack,
     }
     
+    private void OnGUI()
+    {
+        GUI.Label(new Rect(10, 10, Screen.width, Screen.height), $"_stateMachine.currentState: {playerMovementStateMachine.CurrentState}\n" +
+                                                                 $"_stateMachine.Velocity: {playerMovementStateMachine.Velocity}\n" +
+                                                                 $"_stateMachine.MoveDir: {playerMovementStateMachine.MoveDir}\n" +
+                                                                 $"_stateMachine.XValue: {playerMovementStateMachine.XValue}\n");
+    }
+    
     [Serializable]
     private class PlayerMovementStateMachine
     {
         private Player _player;
         
         [SerializeField] private float velocityMultiplier;
+        [SerializeField] private float maxRotationangle;
         
         [SerializeField] private IdleMovementState idleState;
         [SerializeField] private AcceleratingMovementState acceleratingState;
@@ -112,8 +121,9 @@ public class Player : MonoBehaviour
         {
             MoveDir = Sign(Input.GetAxis("Horizontal"));
             CurrentState?.Update(deltaTime);
-            Vector3 newPos = GameManager.Instance.KeepInBounds(_player.transform.position 
+            Vector3 newPos = GameManager.Instance.KeepInBounds(_player.transform.position
                                                                + Vector3.right * (Velocity * velocityMultiplier * deltaTime));
+            _player.transform.rotation = Quaternion.Euler(0f, XValue * Sign(Velocity) * maxRotationangle, 0f);
             if (Mathf.Abs(_player.transform.position.x - newPos.x) < Mathf.Epsilon)
             {
                 Velocity = 0;
@@ -178,6 +188,7 @@ public class Player : MonoBehaviour
 
         public override void StartState(PlayerMovementStateType previousState)
         {
+            _stateMachine.Velocity = 0f;
         }
 
         public override void StopState(PlayerMovementStateType nextState)
@@ -198,13 +209,13 @@ public class Player : MonoBehaviour
                 _stateMachine.ChangeState(Mathf.Abs(_stateMachine.Velocity) > 0 ?
                     PlayerMovementStateType.Decelerating : PlayerMovementStateType.Idle);
             }
-            else if (_stateMachine.MoveDir != Sign(_stateMachine.Velocity) && Sign(_stateMachine.Velocity) == 0)
+            else if (_stateMachine.MoveDir != Sign(_stateMachine.Velocity) && Sign(_stateMachine.Velocity) != 0)
             {
                 _stateMachine.ChangeState(PlayerMovementStateType.TurningBack);
             }
             else
             {
-                _stateMachine.Velocity = accelerationCurve.Evaluate(_stateMachine.XValue) * Sign(_stateMachine.MoveDir);
+                _stateMachine.Velocity = accelerationCurve.Evaluate(_stateMachine.XValue) * _stateMachine.MoveDir;
             }
         }
 
@@ -229,8 +240,9 @@ public class Player : MonoBehaviour
             {
                 _stateMachine.ChangeState(_stateMachine.MoveDir != Sign(_stateMachine.Velocity) ?
                     PlayerMovementStateType.TurningBack : PlayerMovementStateType.Accelerating);
+                // _stateMachine.ChangeState(PlayerMovementStateType.Accelerating);
             }
-            else if (Mathf.Abs(_stateMachine.Velocity) < Mathf.Epsilon)
+            else if (_stateMachine.XValue < Mathf.Epsilon)
             {
                 _stateMachine.ChangeState(PlayerMovementStateType.Idle);
             }
@@ -279,6 +291,7 @@ public class Player : MonoBehaviour
 
         public override void StopState(PlayerMovementStateType nextState)
         {
+            _stateMachine.Velocity = 0f;
         }
     }
 }
