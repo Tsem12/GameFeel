@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class ScoreManager : MonoBehaviour
 {
@@ -10,7 +11,8 @@ public class ScoreManager : MonoBehaviour
     [SerializeField] private int _score;
     [SerializeField] private TextMeshProUGUI _scoreText;
     public int Score => _score;
-    public static Action<int> onScoreChange;
+
+    public UnityEvent onScoreChange;
     [SerializeField] private int _pointPerInvader;
 
     #region Multplier
@@ -123,7 +125,7 @@ public class ScoreManager : MonoBehaviour
     public void AddScore(int value)
     {
         _score += value * Multiplier;
-        onScoreChange?.Invoke(_score);
+        onScoreChange?.Invoke();
         UpdateTextScore();
 
     }
