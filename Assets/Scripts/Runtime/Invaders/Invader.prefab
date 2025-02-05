@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7800715660822650674}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: ---FeelEvents---
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -46,7 +46,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2909397453283891399}
   - component: {fileID: 6079227004572803818}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: EventSpawn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -384,7 +384,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2209905734865532240}
   - component: {fileID: 2050412275111694115}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: EventTakeDamage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -629,7 +629,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3306173818753631062}
   - component: {fileID: 5267312189408132122}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: EvenMoveDown
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1003,7 +1003,7 @@ GameObject:
   - component: {fileID: 9109969425864263349}
   - component: {fileID: 1286698669282929100}
   - component: {fileID: 3570564264635578696}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Invader
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1205,7 +1205,7 @@ GameObject:
   - component: {fileID: 1327753946185454010}
   - component: {fileID: 3044521800614657043}
   - component: {fileID: 8907753550187728022}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: GFX
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1436,7 +1436,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2823988772393092732}
   - component: {fileID: 6301016848149565495}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: EvenShoot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1681,7 +1681,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5841750377421615860}
   - component: {fileID: 8071242301102555671}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: EventDeath
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2167,7 +2167,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8808591723042360307}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: ShootAt
   m_TagString: Untagged
   m_Icon: {fileID: 0}

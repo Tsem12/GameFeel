@@ -95,7 +95,13 @@ public class Player : MonoBehaviour
         TurningBack,
         Dashing,
     }
-    
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.green;
+        Gizmos.DrawWireSphere(transform.position, playerMovementStateMachine.DashingState.PerfectDodgeRadius);
+    }
+
     private void OnGUI()
     {
         GUI.Label(new Rect(10, 10, Screen.width, Screen.height), $"_stateMachine.currentState: {playerMovementStateMachine.CurrentState}\n" +
@@ -121,6 +127,7 @@ public class Player : MonoBehaviour
         [SerializeField] private TurningBackMovementState turningBackState;
         [SerializeField] private DashingMovementState dashingState;
         
+        
         public PlayerMovementStateType CurrentStateType { get; private set; }
         public PlayerMovementState CurrentState => GetState(CurrentStateType);
         
@@ -128,6 +135,8 @@ public class Player : MonoBehaviour
         public bool IsDashing { get; private set; }
         public float Velocity { get; set; }
         public float XValue { get; set; }
+
+        public DashingMovementState DashingState => dashingState;
 
         private float currentDashCooldown;
         
@@ -138,7 +147,7 @@ public class Player : MonoBehaviour
             acceleratingState.Init(this, player);
             deceleratingState.Init(this, player);
             turningBackState.Init(this, player);
-            dashingState.Init(this, player);
+            DashingState.Init(this, player);
             CurrentStateType = PlayerMovementStateType.Idle;
             CurrentState.StartState(PlayerMovementStateType.Idle);
         }
@@ -179,7 +188,7 @@ public class Player : MonoBehaviour
                 PlayerMovementStateType.Accelerating => acceleratingState,
                 PlayerMovementStateType.Decelerating => deceleratingState,
                 PlayerMovementStateType.TurningBack => turningBackState,
-                PlayerMovementStateType.Dashing => dashingState,
+                PlayerMovementStateType.Dashing => DashingState,
                 _ => idleState,
             };
         }
@@ -355,10 +364,17 @@ public class Player : MonoBehaviour
 
         [SerializeField] private UnityEvent onDashStart;
         [SerializeField] private UnityEvent onDashEnd;
+        
+        [Header("PerfectDodge")]
+        [SerializeField] private float _perfectDodgeRadius;
+        [SerializeField] private LayerMask _dodgeLayer;
+        [SerializeField] private UnityEvent onDashPerfect;
 
         private float timerCount;
         private float startMoveDir;
-        
+
+        public float PerfectDodgeRadius => _perfectDodgeRadius;
+
         public override void Update(float deltaTime)
         {
             timerCount += deltaTime * ( 1f / durationTime);
@@ -375,6 +391,12 @@ public class Player : MonoBehaviour
             startMoveDir = _stateMachine.MoveDir;
             _player.IsInvicible = true;
             onDashStart?.Invoke();
+
+            Collider2D r = Physics2D.OverlapCircle(_player.transform.position, PerfectDodgeRadius, _dodgeLayer);
+            if (r != null)
+            {
+                onDashPerfect?.Invoke();
+            }
         }
 
         public override void StopState(PlayerMovementStateType nextState)
