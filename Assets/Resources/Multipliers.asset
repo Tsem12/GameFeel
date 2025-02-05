@@ -13,11 +13,6 @@ MonoBehaviour:
   m_Name: Multipliers
   m_EditorClassIdentifier: 
   multipliers:
-  - cumulativeScore: 1
-    multiplier: 1
-  - cumulativeScore: 20
-    multiplier: 2
-  - cumulativeScore: 50
-    multiplier: 4
-  - cumulativeScore: 70
-    multiplier: 8
+  - multiplier: 1
+  - multiplier: 5
+  - multiplier: 15

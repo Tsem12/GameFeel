@@ -1,5 +1,7 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class Wave : MonoBehaviour
 {
@@ -15,6 +17,8 @@ public class Wave : MonoBehaviour
     [SerializeField] private Vector2 bounds;
 
     // Difficulty progress depending on enemy left ratio
+    [Tooltip("difficultyIncreaseAfterClearingWave")] [SerializeField, Range(0f, 1f)] private float _difficultyIncrease;
+    private float _currentBaseDifficulty;
     [SerializeField] private AnimationCurve difficultyProgress = AnimationCurve.Linear(0, 0, 1, 1);
 
     // Speed min and max depending on difficulty progress
@@ -40,6 +44,8 @@ public class Wave : MonoBehaviour
 
     float shootCooldown;
 
+    private Vector3 _initPos;
+
     struct Column { public int id; public List<Invader> invaders; }
     struct Row { public int id; public List<Invader> invaders; }
 
@@ -49,6 +55,17 @@ public class Wave : MonoBehaviour
 
     void Awake()
     {
+        _initPos = transform.position;
+        CreateWave();
+    }
+
+    private void CreateWave()
+    {
+        Bullet[] t = GameObject.FindObjectsOfType<Bullet>();
+        t.ToList().ForEach(t => Destroy(t.gameObject));
+        
+        transform.position = _initPos;
+        
         shootCooldown = timeBeforeFirstShoot;
 
         for (int i = 0; i < columns; i++)
@@ -72,17 +89,16 @@ public class Wave : MonoBehaviour
                 invaderPerRow[j].invaders.Add(invader);
             }
         }
-        
     }
 
     private void OnEnable()
     {
-        Invader.onDestroy += RemoveInvader;
+        Invader.OnDeathAction += RemoveInvader;
     }
 
     private void OnDisable()
     {
-        Invader.onDestroy -= RemoveInvader;
+        Invader.OnDeathAction -= RemoveInvader;
     }
 
     void Update()
@@ -114,6 +130,7 @@ public class Wave : MonoBehaviour
 
         // Speed depends on remaining invaders ratio
         float t = 1f - (invaders.Count - 1) / (float)((rows * columns) - 1);
+        t = Mathf.Clamp01(t + _currentBaseDifficulty);
         float speed = Mathf.Lerp(speedMin, speedMax, difficultyProgress.Evaluate(t));
 
         Vector3 direction = directions[(int)move];
@@ -164,7 +181,7 @@ public class Wave : MonoBehaviour
                         delta -= (distance - downStep);
                         BeginNextMove();
                     }
-                    invaders.ForEach(invader => invader.OnLineChanged?.Invoke());
+                    invaders.ForEach(invader => invader.OnMoveDown());
                     break;
                 }
         }
@@ -224,6 +241,12 @@ public class Wave : MonoBehaviour
             {
                 invaderPerRow[indexRow] = row;
             }
+        }
+
+        if (invaders.Count <= 0)
+        {
+            _currentBaseDifficulty += _difficultyIncrease;
+            CreateWave();
         }
     }
 
