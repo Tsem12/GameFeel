@@ -8,7 +8,6 @@ public class Multipliers : ScriptableObject
     [System.Serializable]
     public struct Multiplier
     {
-        public int cumulativeScore;
         public int multiplier;
     }
 
