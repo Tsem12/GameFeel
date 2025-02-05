@@ -25,6 +25,7 @@ public class Player : MonoBehaviour
     [SerializeField, Min(0f)] private int numberOfLives = 3;
     public UnityEvent onFirstLifeLost;
     public UnityEvent onSecondLifeLost;
+    public UnityEvent onPlayerDeath;
     #endregion
 
     void Update()
@@ -95,6 +96,7 @@ public class Player : MonoBehaviour
                 break;
             case 0:
             default:
+                onPlayerDeath?.Invoke();
                 GameManager.Instance.PlayGameOver();
                 break;
 
