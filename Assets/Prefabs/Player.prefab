@@ -138,7 +138,7 @@ MonoBehaviour:
   playerMovementStateMachine:
     velocityMultiplier: 5
     maxRotationangle: 50
-    dashCooldown: 1
+    dashCooldown: 3
     idleState:
       durationTime: 1
     acceleratingState:
@@ -168,7 +168,7 @@ MonoBehaviour:
         m_PostInfinity: 2
         m_RotationOrder: 4
     deceleratingState:
-      durationTime: 0.2
+      durationTime: 0.5
       decelerationCurve:
         serializedVersion: 2
         m_Curve:

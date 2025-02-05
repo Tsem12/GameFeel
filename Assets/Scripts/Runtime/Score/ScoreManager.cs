@@ -123,12 +123,12 @@ public class ScoreManager : MonoBehaviour
 
     private void OnEnable()
     {
-        Invader.onDestroy += DestroyedInvader;
+        Invader.OnDeathAction += DestroyedInvader;
     }
 
     private void OnDisable()
     {
-        Invader.onDestroy -= DestroyedInvader;
+        Invader.OnDeathAction -= DestroyedInvader;
     }
 
     private void DestroyedInvader(Invader invader)
