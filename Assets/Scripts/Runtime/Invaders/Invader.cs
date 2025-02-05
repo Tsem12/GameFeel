@@ -13,6 +13,7 @@ public class Invader : MonoBehaviour
     private int currentLife;
     private bool _isDead;
 
+    [SerializeField] public UnityEvent OnSpawn;
     [SerializeField] public UnityEvent OnDeath;
     [SerializeField] public UnityEvent OnSoot;
     [SerializeField] public UnityEvent OnLineChanged;
@@ -25,6 +26,7 @@ public class Invader : MonoBehaviour
     public void Start()
     {
         currentLife = maxLife;
+        OnSpawn?.Invoke();
     }
 
     public void Initialize(Vector2Int gridIndex)
