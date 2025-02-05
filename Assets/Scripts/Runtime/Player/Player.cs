@@ -6,6 +6,7 @@ public class Player : MonoBehaviour
 
     [SerializeField] private Bullet bulletPrefab;
     [SerializeField] private Transform shootAt;
+    public UnityEvent onPlayerShoot;
     [SerializeField] private float shootCooldown = 1f;
     [SerializeField] private string collideWithTag = "Untagged";
 
@@ -23,6 +24,7 @@ public class Player : MonoBehaviour
     #region Player life
     [Header("Player life")]
     [SerializeField, Min(0f)] private int numberOfLives = 3;
+    public UnityEvent onDamageReceived;
     public UnityEvent onFirstLifeLost;
     public UnityEvent onSecondLifeLost;
     public UnityEvent onPlayerDeath;
@@ -80,6 +82,7 @@ public class Player : MonoBehaviour
         Destroy(collision.gameObject);
 
         velocity = 0f;
+        onDamageReceived?.Invoke();
         CheckLives();
     }
 
