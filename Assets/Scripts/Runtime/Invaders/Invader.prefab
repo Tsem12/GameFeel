@@ -574,7 +574,7 @@ MonoBehaviour:
         Duration: 0.5
         ResetShakerValuesAfterShake: 1
         ResetTargetValuesAfterShake: 1
-        ShakeSpeed: 20
+        ShakeSpeed: 50
         ShakeRange: 0.1
         ShakeMainDirection: {x: 1, y: 1, z: 0}
         RandomizeDirection: 1
@@ -750,7 +750,7 @@ MonoBehaviour:
     - rid: 8820702401691648009
       type: {class: MMF_Rotation, ns: MoreMountains.Feedbacks, asm: MoreMountains.Feedbacks}
       data:
-        Active: 1
+        Active: 0
         UniqueID: -739924067
         Label: Rotation
         ChannelMode: 0
@@ -1884,8 +1884,8 @@ MonoBehaviour:
         DebugActive: 0
         TargetRigidbody2D: {fileID: 3570564264635578696}
         Mode: 0
-        MinForce: {x: -3, y: 5}
-        MaxForce: {x: 3, y: 5}
+        MinForce: {x: -10, y: 1}
+        MaxForce: {x: 10, y: 1}
         MinTorque: 0
         MaxTorque: 0
         AppliedForceMode: 1
