@@ -26,7 +26,7 @@ public class Invader : MonoBehaviour
     public void Start()
     {
         currentLife = maxLife;
-        if (GameManager.Instance.enableJuice)
+        if ((GameManager.Instance.GamefeelActivation & GameManager.GAMEFEEL_ACTIVATION.Invader) == GameManager.GAMEFEEL_ACTIVATION.Invader)
         {
             OnSpawn?.Invoke();
         }
@@ -48,7 +48,7 @@ public class Invader : MonoBehaviour
             transform.parent = null;
             _rb.bodyType = RigidbodyType2D.Dynamic;
             OnDeathAction?.Invoke(this);
-            if (GameManager.Instance.enableJuice)
+            if ((GameManager.Instance.GamefeelActivation & GameManager.GAMEFEEL_ACTIVATION.Invader) == GameManager.GAMEFEEL_ACTIVATION.Invader)
             {
                 OnDeath?.Invoke(); //gamefeel
             }
@@ -60,7 +60,11 @@ public class Invader : MonoBehaviour
         }
         else
         {
-            OnTakeDamage?.Invoke();    
+            if ((GameManager.Instance.GamefeelActivation & GameManager.GAMEFEEL_ACTIVATION.Invader) ==
+                GameManager.GAMEFEEL_ACTIVATION.Invader)
+            {
+                OnTakeDamage?.Invoke();   
+            }
         }
     }
 
@@ -68,7 +72,8 @@ public class Invader : MonoBehaviour
     {
         if(_isDead)
             return;
-        if (GameManager.Instance.enableJuice)
+        
+        if ((GameManager.Instance.GamefeelActivation & GameManager.GAMEFEEL_ACTIVATION.Invader) == GameManager.GAMEFEEL_ACTIVATION.Invader)
         {
             OnLineChanged?.Invoke();
         }
@@ -77,7 +82,7 @@ public class Invader : MonoBehaviour
     public void Shoot()
     {
         Instantiate(bulletPrefab, shootAt.position, Quaternion.identity);
-        if (GameManager.Instance.enableJuice)
+        if ((GameManager.Instance.GamefeelActivation & GameManager.GAMEFEEL_ACTIVATION.Invader) == GameManager.GAMEFEEL_ACTIVATION.Invader)
         {
             OnSoot?.Invoke();
         }

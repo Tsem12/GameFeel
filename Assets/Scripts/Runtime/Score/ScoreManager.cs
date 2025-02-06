@@ -44,6 +44,7 @@ public class ScoreManager : MonoBehaviour
 
     [Header("Unity Events")]
     public UnityEvent onScoreChange;
+    public UnityEvent onDisableGamefeel;
 
     [Header("Multiplier Increase")]
     public UnityEvent onMultiplierIncrease;
@@ -89,14 +90,14 @@ public class ScoreManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (GameManager.Instance.enableJuice)
+        if ((GameManager.Instance.GamefeelActivation & GameManager.GAMEFEEL_ACTIVATION.Combo) == GameManager.GAMEFEEL_ACTIVATION.Combo)
         {
             if (_displayedScore < _score)
             {
                 // je rajoute 5 au lerp pour ajouter les valeurs plus rapidement
                 _displayedScore = (int)Mathf.Lerp(_displayedScore, _score + 5, _scoreDisplaySpeed * Time.deltaTime);
 
-                // si le score affiché est plus grand que le score réel, je le remet à la valeur du score réel pour être sûr qu'il soit égal
+                // si le score affich? est plus grand que le score r?el, je le remet ? la valeur du score r?el pour ?tre s?r qu'il soit ?gal
                 if (_displayedScore > _score)
                     _displayedScore = _score;
 
@@ -133,14 +134,26 @@ public class ScoreManager : MonoBehaviour
     {
         Invader.OnDeathAction += DestroyedInvader;
         Player.OnTakeDamageAction += DecreaseMultiplier;
+        GameManager.onGamefeelChanged += OnGamefeelChanged;
     }
 
     private void OnDisable()
     {
         Invader.OnDeathAction -= DestroyedInvader;
         Player.OnTakeDamageAction -= DecreaseMultiplier;
+        GameManager.onGamefeelChanged -= OnGamefeelChanged;
     }
 
+    private void OnGamefeelChanged()
+    {
+        if((GameManager.Instance.GamefeelActivation & GameManager.GAMEFEEL_ACTIVATION.Combo) == GameManager.GAMEFEEL_ACTIVATION.Combo)
+            onDisableGamefeel?.Invoke();
+        else
+        {
+            onMultiplierChange?.Invoke(_multipliersScriptable.multipliers[_currentMultiplierIndex]);
+            InvokeEventIncreaseMultiplier();
+        }
+    }
     private void DestroyedInvader(Invader invader)
     {
         AddScore(_pointPerInvader);
@@ -153,36 +166,41 @@ public class ScoreManager : MonoBehaviour
 
     private void IncreaseMultiplier()
     {
-        if (GameManager.Instance.enableJuice)
+        if ((GameManager.Instance.GamefeelActivation & GameManager.GAMEFEEL_ACTIVATION.Combo) == GameManager.GAMEFEEL_ACTIVATION.Combo)
             onMultiplierIncrease?.Invoke();
 
         if (IsOnLastMultiplier() && _multiplier == GetMultiplierFromScriptable())
             return;
 
-        if(_multiplier < GetMaxMultiplier()){
+        if (_multiplier < GetMaxMultiplier())
+        {
             _multiplier++;
         }
 
         if (_multiplier > GetMultiplierFromScriptable())
             _currentMultiplierIndex++;
 
-        if (GameManager.Instance.enableJuice)
+        if ((GameManager.Instance.GamefeelActivation & GameManager.GAMEFEEL_ACTIVATION.Combo) == GameManager.GAMEFEEL_ACTIVATION.Combo)
             onMultiplierChange?.Invoke(_multipliersScriptable.multipliers[_currentMultiplierIndex]);
-        
 
-        switch(_multiplier)
+        InvokeEventIncreaseMultiplier();
+
+        UpdateTextMultiplier();
+    }
+
+    private void InvokeEventIncreaseMultiplier()
+    {
+        switch (_multiplier)
         {
             case 5:
-                if (GameManager.Instance.enableJuice)
+                if ((GameManager.Instance.GamefeelActivation & GameManager.GAMEFEEL_ACTIVATION.Combo) == GameManager.GAMEFEEL_ACTIVATION.Combo)
                     onMultiplierIncreaseToX5?.Invoke();
                 break;
             case 15:
-                if (GameManager.Instance.enableJuice)
+                if ((GameManager.Instance.GamefeelActivation & GameManager.GAMEFEEL_ACTIVATION.Combo) == GameManager.GAMEFEEL_ACTIVATION.Combo)
                     onMultiplierIncreaseToX15?.Invoke();
                 break;
         }
-
-        UpdateTextMultiplier();
     }
 
     private bool IsOnLastMultiplier() => (_currentMultiplierIndex + 1) >= _multipliersScriptable.multipliers.Count;
@@ -198,33 +216,37 @@ public class ScoreManager : MonoBehaviour
             _multiplier = _multipliersScriptable.multipliers[_currentMultiplierIndex].multiplier;
         }
 
-        if(GameManager.Instance.enableJuice)
+        if ((GameManager.Instance.GamefeelActivation & GameManager.GAMEFEEL_ACTIVATION.Combo) == GameManager.GAMEFEEL_ACTIVATION.Combo)
             onMultiplierDecrease?.Invoke();
 
-        switch (_multiplier)
-        {
-            case 1:
-                if (GameManager.Instance.enableJuice)
-                    onMultiplierDecreaseToX1?.Invoke();
-                break;
-            case 5:
-                if (GameManager.Instance.enableJuice)
-                    onMultiplierDecreaseToX5?.Invoke();
-                break;
-        }
-
+        InvokeEventDecreaseMultiplier();
 
         UpdateTextMultiplier();
         _multiplierTimer = _multiplierDuration;
     }
 
+    private void InvokeEventDecreaseMultiplier()
+    {
+        switch (_multiplier)
+        {
+            case 1:
+                if ((GameManager.Instance.GamefeelActivation & GameManager.GAMEFEEL_ACTIVATION.Combo) == GameManager.GAMEFEEL_ACTIVATION.Combo)
+                    onMultiplierDecreaseToX1?.Invoke();
+                break;
+            case 5:
+                if ((GameManager.Instance.GamefeelActivation & GameManager.GAMEFEEL_ACTIVATION.Combo) == GameManager.GAMEFEEL_ACTIVATION.Combo)
+                    onMultiplierDecreaseToX5?.Invoke();
+                break;
+        }
+    }
+
     public void AddScore(int value)
     {
         _score += value * _multiplier;
-        if (GameManager.Instance.enableJuice)
+        if ((GameManager.Instance.GamefeelActivation & GameManager.GAMEFEEL_ACTIVATION.Combo) == GameManager.GAMEFEEL_ACTIVATION.Combo)
             onScoreChange?.Invoke();
 
-        if (!GameManager.Instance.enableJuice)
+        if ((GameManager.Instance.GamefeelActivation & GameManager.GAMEFEEL_ACTIVATION.Combo) != GameManager.GAMEFEEL_ACTIVATION.Combo)
         {
             _displayedScore = _score;
             UpdateTextScore();
