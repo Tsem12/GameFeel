@@ -17,6 +17,8 @@ public class GameManager : MonoBehaviour
 
     public bool enableJuice;
 
+    public static Action onGamefeelChanged;
+
     void Awake()
     {
         Instance = this;
@@ -93,6 +95,7 @@ public class GameManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Return))
         {
             enableJuice = !enableJuice;
+            onGamefeelChanged?.Invoke();
         }
     }
 }
