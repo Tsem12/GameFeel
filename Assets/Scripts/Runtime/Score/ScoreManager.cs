@@ -89,17 +89,21 @@ public class ScoreManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (_displayedScore < _score)
+        if (GameManager.Instance.enableJuice)
         {
-            // je rajoute 5 au lerp pour ajouter les valeurs plus rapidement
-            _displayedScore = (int)Mathf.Lerp(_displayedScore, _score + 5, _scoreDisplaySpeed * Time.deltaTime);
+            if (_displayedScore < _score)
+            {
+                // je rajoute 5 au lerp pour ajouter les valeurs plus rapidement
+                _displayedScore = (int)Mathf.Lerp(_displayedScore, _score + 5, _scoreDisplaySpeed * Time.deltaTime);
 
-            // si le score affiché est plus grand que le score réel, je le remet à la valeur du score réel pour être sûr qu'il soit égal
-            if (_displayedScore > _score)
-                _displayedScore = _score;
+                // si le score affiché est plus grand que le score réel, je le remet à la valeur du score réel pour être sûr qu'il soit égal
+                if (_displayedScore > _score)
+                    _displayedScore = _score;
 
-            UpdateTextScore();
+                UpdateTextScore();
+            }
         }
+            
 
         if (!_isMultiplierActive)
             return;
@@ -220,6 +224,11 @@ public class ScoreManager : MonoBehaviour
         if (GameManager.Instance.enableJuice)
             onScoreChange?.Invoke();
 
+        if (!GameManager.Instance.enableJuice)
+        {
+            _displayedScore = _score;
+            UpdateTextScore();
+        }
     }
 
     private void UpdateTextScore()
