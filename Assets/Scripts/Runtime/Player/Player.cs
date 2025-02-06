@@ -11,6 +11,8 @@ public class Player : MonoBehaviour
     [SerializeField] private string collideWithTag = "Untagged";
     [SerializeField] private MMF_Player wigglePlayer;
 
+    [SerializeField] private UnityEvent OnShoot;
+    
     private float lastShootTimestamp = Mathf.NegativeInfinity;
     public bool IsInvicible { get; set; }
 
@@ -63,6 +65,10 @@ public class Player : MonoBehaviour
 
     private void Shoot()
     {
+        if ((GameManager.Instance.GamefeelActivation & GameManager.GAMEFEEL_ACTIVATION.Player) == GameManager.GAMEFEEL_ACTIVATION.Player)
+        {
+            OnShoot?.Invoke();
+        }
         Instantiate(bulletPrefab, shootAt.position, Quaternion.identity);
         lastShootTimestamp = Time.time;
     }
