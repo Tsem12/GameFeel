@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: FX_Dodge
+  m_Name: FX_DodgeInvaderBullet
   m_Shader: {fileID: 4800000, guid: 76bedae83eb497946aefde4f6b8795ea, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
@@ -32,7 +32,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Texture:
-        m_Texture: {fileID: 2800000, guid: 0b9510d2790829140953392aae2b6679, type: 3}
+        m_Texture: {fileID: 2800000, guid: 16a86a7f581fc4dfb953e0df8ad3ecac, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _TextureSample0:
@@ -59,7 +59,7 @@ Material:
     m_Floats:
     - _AlphaCutoff: 0.5
     - _D_Speed_X: 0
-    - _D_Speed_Y: 0.5
+    - _D_Speed_Y: 0
     - _D_Tile_X: 0.47
     - _D_Tile_Y: 0.2
     - _HDR: 3

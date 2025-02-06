@@ -26,17 +26,15 @@ public class Invader : MonoBehaviour
     public void Start()
     {
         currentLife = maxLife;
-        OnSpawn?.Invoke();
+        if (GameManager.Instance.enableJuice)
+        {
+            OnSpawn?.Invoke();
+        }
     }
 
     public void Initialize(Vector2Int gridIndex)
     {
         this.GridIndex = gridIndex;
-    }
-
-    public void OnDestroy()
-    {
-        OnDeathAction?.Invoke(this);
     }
 
     public void OnTriggerEnter2D(Collider2D collision)
@@ -50,7 +48,14 @@ public class Invader : MonoBehaviour
             transform.parent = null;
             _rb.bodyType = RigidbodyType2D.Dynamic;
             OnDeathAction?.Invoke(this);
-            OnDeath?.Invoke(); //gamefeel
+            if (GameManager.Instance.enableJuice)
+            {
+                OnDeath?.Invoke(); //gamefeel
+            }
+            else
+            {
+                ClearInvader();
+            }
             _isDead = true;
         }
         else
@@ -63,13 +68,19 @@ public class Invader : MonoBehaviour
     {
         if(_isDead)
             return;
-        OnLineChanged?.Invoke();
+        if (GameManager.Instance.enableJuice)
+        {
+            OnLineChanged?.Invoke();
+        }
     }
 
     public void Shoot()
     {
         Instantiate(bulletPrefab, shootAt.position, Quaternion.identity);
-        OnSoot?.Invoke();
+        if (GameManager.Instance.enableJuice)
+        {
+            OnSoot?.Invoke();
+        }
     }
 
     public void ClearInvader()
