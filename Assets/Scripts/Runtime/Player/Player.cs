@@ -33,6 +33,10 @@ public class Player : MonoBehaviour
     {
         UpdateMovement();
         UpdateActions();
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            MenuManager.Instance.OpenMenu(!MenuManager.Instance.IsMenuOpen);
+        }
     }
 
     private void UpdateMovement()
