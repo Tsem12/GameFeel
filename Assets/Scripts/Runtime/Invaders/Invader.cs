@@ -34,11 +34,6 @@ public class Invader : MonoBehaviour
         this.GridIndex = gridIndex;
     }
 
-    public void OnDestroy()
-    {
-        OnDeathAction?.Invoke(this);
-    }
-
     public void OnTriggerEnter2D(Collider2D collision)
     {
         if(collision.gameObject.tag != collideWithTag) { return; }
