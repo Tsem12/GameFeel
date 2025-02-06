@@ -148,6 +148,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3560861808195820297, guid: 3b6d922cc52ee0646bb7221c4cb56cce, type: 3}
+      propertyPath: _pointPerInvader
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 3560861808195820297, guid: 3b6d922cc52ee0646bb7221c4cb56cce, type: 3}
       propertyPath: _multiplierDuration
       value: 2.5
       objectReference: {fileID: 0}
