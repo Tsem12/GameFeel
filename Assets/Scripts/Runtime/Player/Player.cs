@@ -64,7 +64,7 @@ public class Player : MonoBehaviour
         if (!collision.gameObject.CompareTag(collideWithTag) || IsInvicible) return;
         Destroy(collision.gameObject);
 
-        if (GameManager.Instance.enableJuice)
+        if ((GameManager.Instance.GamefeelActivation & GameManager.GAMEFEEL_ACTIVATION.Player) == GameManager.GAMEFEEL_ACTIVATION.Player)
             OnTakeDamage?.Invoke();
 
         OnTakeDamageAction?.Invoke();
@@ -77,15 +77,15 @@ public class Player : MonoBehaviour
         switch(numberOfLives)
         {
             case 2:
-                if (GameManager.Instance.enableJuice)
+                if ((GameManager.Instance.GamefeelActivation & GameManager.GAMEFEEL_ACTIVATION.Player) == GameManager.GAMEFEEL_ACTIVATION.Player)
                     onFirstLifeLost?.Invoke();
                 break;
             case 1:
-                if (GameManager.Instance.enableJuice)
+                if ((GameManager.Instance.GamefeelActivation & GameManager.GAMEFEEL_ACTIVATION.Player) == GameManager.GAMEFEEL_ACTIVATION.Player)
                     onSecondLifeLost?.Invoke();
                 break;
             default:
-                if (GameManager.Instance.enableJuice)
+                if ((GameManager.Instance.GamefeelActivation & GameManager.GAMEFEEL_ACTIVATION.Player) == GameManager.GAMEFEEL_ACTIVATION.Player)
                     GameManager.Instance.PlayGameOver();
                 break;
 
@@ -406,7 +406,7 @@ public class Player : MonoBehaviour
             Collider2D r = Physics2D.OverlapCircle(_player.transform.position, PerfectDodgeRadius, _dodgeLayer);
             if (r)
             {
-                if (GameManager.Instance.enableJuice)
+                if ((GameManager.Instance.GamefeelActivation & GameManager.GAMEFEEL_ACTIVATION.Player) == GameManager.GAMEFEEL_ACTIVATION.Player)
                 {
                     onDashPerfect?.Invoke();
                 }

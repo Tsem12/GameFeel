@@ -1,11 +1,14 @@
 using System;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
 
 [DefaultExecutionOrder(-100)]
 public class GameManager : MonoBehaviour
 {
+    [Flags]
+    public enum GAMEFEEL_ACTIVATION{Player = 1, Invader = 2, Combo = 4}
     public enum DIRECTION { Right = 0, Up = 1, Left = 2, Down = 3 }
 
     public static GameManager Instance = null;
@@ -13,15 +16,18 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Vector2 bounds;
     private Bounds Bounds => new Bounds(transform.position, new Vector3(bounds.x, bounds.y, 1000f));
 
+    public GAMEFEEL_ACTIVATION GamefeelActivation => _gamefeelActivation;
+
     [SerializeField] private float gameOverHeight;
 
-    public bool enableJuice;
-
     public static Action onGamefeelChanged;
+
+    public GAMEFEEL_ACTIVATION _gamefeelActivation = GAMEFEEL_ACTIVATION.Combo | GAMEFEEL_ACTIVATION.Invader | GAMEFEEL_ACTIVATION.Player;
 
     void Awake()
     {
         Instance = this;
+        _gamefeelActivation = GAMEFEEL_ACTIVATION.Combo | GAMEFEEL_ACTIVATION.Invader | GAMEFEEL_ACTIVATION.Player;
     }
 
     public Vector3 KeepInBounds(Vector3 position)
@@ -92,10 +98,25 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Return))
+        if (Input.GetKeyDown(KeyCode.Keypad1))
         {
-            enableJuice = !enableJuice;
+            _gamefeelActivation ^= GAMEFEEL_ACTIVATION.Player;
             onGamefeelChanged?.Invoke();
+        }
+        else if(Input.GetKeyDown(KeyCode.Keypad2))
+        {
+            _gamefeelActivation ^= GAMEFEEL_ACTIVATION.Combo;
+            onGamefeelChanged?.Invoke();
+        }
+        else if(Input.GetKeyDown(KeyCode.Keypad3))
+        {
+            _gamefeelActivation ^= GAMEFEEL_ACTIVATION.Invader;
+            onGamefeelChanged?.Invoke();
+        }
+
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            SceneManager.LoadScene(0);
         }
     }
 }

@@ -18,7 +18,7 @@ public class Bullet : MonoBehaviour
     
     public void Dodged()
     {
-        if (GameManager.Instance.enableJuice)
+        if ((GameManager.Instance.GamefeelActivation & GameManager.GAMEFEEL_ACTIVATION.Player) == GameManager.GAMEFEEL_ACTIVATION.Player)
         {
             _dodgedEvent?.Invoke();
         }
