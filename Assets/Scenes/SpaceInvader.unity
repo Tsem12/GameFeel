@@ -143,9 +143,13 @@ PrefabInstance:
       propertyPath: m_AnchorMin.x
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1735578262617459010, guid: 3b6d922cc52ee0646bb7221c4cb56cce, type: 3}
+      propertyPath: managedReferences[6229287668906721301].Active
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3560861808195820297, guid: 3b6d922cc52ee0646bb7221c4cb56cce, type: 3}
       propertyPath: _multiplierDuration
-      value: 1.5
+      value: 2.5
       objectReference: {fileID: 0}
     - target: {fileID: 4347288411752372749, guid: 3b6d922cc52ee0646bb7221c4cb56cce, type: 3}
       propertyPath: m_Name
