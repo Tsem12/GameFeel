@@ -11,5 +11,6 @@ public class Bullet : MonoBehaviour
     {
         Rigidbody2D rb = GetComponent<Rigidbody2D>();
         rb.velocity = startVelocity;
+        Destroy(gameObject, 10f);
     }
 }
