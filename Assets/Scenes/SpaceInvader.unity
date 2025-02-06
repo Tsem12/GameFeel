@@ -149,7 +149,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3560861808195820297, guid: 3b6d922cc52ee0646bb7221c4cb56cce, type: 3}
       propertyPath: _pointPerInvader
-      value: 100
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 3560861808195820297, guid: 3b6d922cc52ee0646bb7221c4cb56cce, type: 3}
       propertyPath: _multiplierDuration
@@ -6924,6 +6924,10 @@ PrefabInstance:
     - target: {fileID: 2402343248719168508, guid: a29059886a6fd2c449d5504eea04ea00, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4903387138708693979, guid: a29059886a6fd2c449d5504eea04ea00, type: 3}
+      propertyPath: InitialModule.startSpeed.scalar
+      value: -2
       objectReference: {fileID: 0}
     - target: {fileID: 5953601565239758391, guid: a29059886a6fd2c449d5504eea04ea00, type: 3}
       propertyPath: m_Name
