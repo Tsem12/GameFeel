@@ -7,7 +7,7 @@ public class Bullet : MonoBehaviour
 {
     [SerializeField] Vector3 startVelocity; 
     public UnityEvent _dodgedEvent;
-
+    public UnityEvent _destroyed;
     // Start is called before the first frame update
     void Awake()
     {
@@ -23,4 +23,10 @@ public class Bullet : MonoBehaviour
             _dodgedEvent?.Invoke();
         }
     }
+    void OnDestroy()
+    {
+        _destroyed?.Invoke();
+    
+    }
 }
+
