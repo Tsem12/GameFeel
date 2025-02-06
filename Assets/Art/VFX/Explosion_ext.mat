@@ -7,8 +7,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: FX_Dodge
-  m_Shader: {fileID: 4800000, guid: 76bedae83eb497946aefde4f6b8795ea, type: 3}
+  m_Name: Explosion_ext
+  m_Shader: {fileID: 4800000, guid: 877b7a773088a3c46a7a738c0c4a5e96, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -23,24 +23,12 @@ Material:
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
-    - _MainTex:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _Text_pouet:
-        m_Texture: {fileID: 2800000, guid: 6415e4b059f8ca249ad6c1c205f2330e, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _Texture:
-        m_Texture: {fileID: 2800000, guid: 0b9510d2790829140953392aae2b6679, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
     - _TextureSample0:
-        m_Texture: {fileID: 2800000, guid: 2102b7016c7576942869381de5001e10, type: 3}
+        m_Texture: {fileID: 2800000, guid: 5551f2320b5bfde4dbdbb0604036a53a, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    - _texcoord:
-        m_Texture: {fileID: 0}
+    - _TextureSample1:
+        m_Texture: {fileID: 2800000, guid: c61e12b00f19ecd448a748ee4f011b63, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - unity_Lightmaps:
@@ -58,19 +46,27 @@ Material:
     m_Ints: []
     m_Floats:
     - _AlphaCutoff: 0.5
-    - _D_Speed_X: 0
-    - _D_Speed_Y: 0.5
-    - _D_Tile_X: 0.47
-    - _D_Tile_Y: 0.2
-    - _HDR: 3
-    - _InvFade: 1
-    - _L_MAX: -0.23
-    - _L_Min: 2.1
+    - _EnvironmentReflections: 1
+    - _Float2: 2.13
+    - _Float3: 0
+    - _Float5: 0.86
+    - _Fresnel_Bias: 0
+    - _Fresnel_Power: 5
+    - _Fresnel_Saturation: 1.5
+    - _Fresnel_Scale: 1
+    - _Frsnel_Bias: 0
+    - _HDR: 2
     - _QueueControl: 0
     - _QueueOffset: 0
     - _ReceiveShadows: 1
+    - _Remainder: 0.3
+    - _Smooth: 1
+    - _Smoothness: 0
+    - _SpecularHighlights: 1
+    - _V_Angle_Speed: 0.5
+    - _V_Scale: 3
+    - _V_X_Pan: 0
+    - _V_Y_Pan: 0
     m_Colors:
-    - _Color0: {r: 0, g: 0.26735523, b: 0.45283014, a: 0}
     - _EmissionColor: {r: 1, g: 1, b: 1, a: 1}
-    - _TintColor: {r: 0.5, g: 0.5, b: 0.5, a: 0.5}
   m_BuildTextureStacks: []
