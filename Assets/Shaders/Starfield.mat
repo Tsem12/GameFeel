@@ -28,10 +28,10 @@ Material:
     - _Brightness: 0.06
     - _DarkMatter: 2.9
     - _DistFading: 0.1
-    - _Formuparam: 0.53
+    - _Formuparam: 0.89
     - _Iterations: 17
     - _Saturation: 0.85
-    - _Speed: -0.22
+    - _Speed: -0.01
     - _StepSize: 0.1
     - _Steps: 20
     - _Tile: 0.59
