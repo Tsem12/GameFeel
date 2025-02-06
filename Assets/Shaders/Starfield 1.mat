@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Starfield
+  m_Name: Starfield 1
   m_Shader: {fileID: 4800000, guid: 5186e30a518127b46bd09175fee4a952, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
@@ -28,13 +28,13 @@ Material:
     - _Brightness: 0.06
     - _DarkMatter: 2.9
     - _DistFading: 0.1
-    - _Formuparam: 0.89
+    - _Formuparam: 0.53
     - _Iterations: 17
-    - _Saturation: 0.85
-    - _Speed: -0.01
-    - _StepSize: 0.1
+    - _Saturation: -0.25
+    - _Speed: -0.04
+    - _StepSize: 0
     - _Steps: 20
-    - _Tile: 0.59
+    - _Tile: 0.71
     - _Zoom: 8.07
     m_Colors:
     - _iMouse: {r: 0, g: 0, b: 0, a: 0}
