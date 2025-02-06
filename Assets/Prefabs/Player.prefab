@@ -764,7 +764,7 @@ MonoBehaviour:
   SafeMode: 3
   Direction: 0
   AutoChangeDirectionOnEnd: 0
-  AutoPlayOnStart: 1
+  AutoPlayOnStart: 0
   AutoPlayOnEnable: 0
   ForceTimescaleMode: 0
   ForcedTimescaleMode: 1
@@ -839,7 +839,7 @@ MonoBehaviour:
   KeepPlayModeChanges: 0
   PerformanceMode: 0
   ForceStopFeedbacksOnDisable: 1
-  PlayCount: 0
+  PlayCount: 2
   references:
     version: 2
     RefIds:
@@ -969,6 +969,7 @@ MonoBehaviour:
   shootAt: {fileID: 1023979827590285164}
   shootCooldown: 0.1
   collideWithTag: Untagged
+  wigglePlayer: {fileID: 4907151178442202275}
   playerMovementStateMachine:
     velocityMultiplier: 6.5
     maxRotationangle: 50
@@ -1380,7 +1381,7 @@ MonoBehaviour:
     CurvePingPong: 0
     PauseMin: 0
     PauseMax: 0
-    LimitedTime: 0
+    LimitedTime: 1
     LimitedTimeTotal: 0
     LimitedTimeFalloff:
       serializedVersion: 2
