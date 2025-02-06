@@ -44,6 +44,7 @@ public class ScoreManager : MonoBehaviour
 
     [Header("Unity Events")]
     public UnityEvent onScoreChange;
+    public UnityEvent onDisableGamefeel;
 
     [Header("Multiplier Increase")]
     public UnityEvent onMultiplierIncrease;
@@ -133,14 +134,26 @@ public class ScoreManager : MonoBehaviour
     {
         Invader.OnDeathAction += DestroyedInvader;
         Player.OnTakeDamageAction += DecreaseMultiplier;
+        GameManager.onGamefeelChanged += OnGamefeelChanged;
     }
 
     private void OnDisable()
     {
         Invader.OnDeathAction -= DestroyedInvader;
         Player.OnTakeDamageAction -= DecreaseMultiplier;
+        GameManager.onGamefeelChanged -= OnGamefeelChanged;
     }
 
+    private void OnGamefeelChanged()
+    {
+        if(!GameManager.Instance.enableJuice)
+            onDisableGamefeel?.Invoke();
+        else
+        {
+            onMultiplierChange?.Invoke(_multipliersScriptable.multipliers[_currentMultiplierIndex]);
+            InvokeEventIncreaseMultiplier();
+        }
+    }
     private void DestroyedInvader(Invader invader)
     {
         AddScore(_pointPerInvader);
@@ -159,7 +172,8 @@ public class ScoreManager : MonoBehaviour
         if (IsOnLastMultiplier() && _multiplier == GetMultiplierFromScriptable())
             return;
 
-        if(_multiplier < GetMaxMultiplier()){
+        if (_multiplier < GetMaxMultiplier())
+        {
             _multiplier++;
         }
 
@@ -168,9 +182,15 @@ public class ScoreManager : MonoBehaviour
 
         if (GameManager.Instance.enableJuice)
             onMultiplierChange?.Invoke(_multipliersScriptable.multipliers[_currentMultiplierIndex]);
-        
 
-        switch(_multiplier)
+        InvokeEventIncreaseMultiplier();
+
+        UpdateTextMultiplier();
+    }
+
+    private void InvokeEventIncreaseMultiplier()
+    {
+        switch (_multiplier)
         {
             case 5:
                 if (GameManager.Instance.enableJuice)
@@ -181,8 +201,6 @@ public class ScoreManager : MonoBehaviour
                     onMultiplierIncreaseToX15?.Invoke();
                 break;
         }
-
-        UpdateTextMultiplier();
     }
 
     private bool IsOnLastMultiplier() => (_currentMultiplierIndex + 1) >= _multipliersScriptable.multipliers.Count;
@@ -198,9 +216,17 @@ public class ScoreManager : MonoBehaviour
             _multiplier = _multipliersScriptable.multipliers[_currentMultiplierIndex].multiplier;
         }
 
-        if(GameManager.Instance.enableJuice)
+        if (GameManager.Instance.enableJuice)
             onMultiplierDecrease?.Invoke();
 
+        InvokeEventDecreaseMultiplier();
+
+        UpdateTextMultiplier();
+        _multiplierTimer = _multiplierDuration;
+    }
+
+    private void InvokeEventDecreaseMultiplier()
+    {
         switch (_multiplier)
         {
             case 1:
@@ -212,10 +238,6 @@ public class ScoreManager : MonoBehaviour
                     onMultiplierDecreaseToX5?.Invoke();
                 break;
         }
-
-
-        UpdateTextMultiplier();
-        _multiplierTimer = _multiplierDuration;
     }
 
     public void AddScore(int value)
