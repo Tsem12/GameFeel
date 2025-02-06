@@ -7,8 +7,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Trail_Enemy_Projectile
-  m_Shader: {fileID: 4800000, guid: f25a2329c7f5e68459e0a7244fe375f1, type: 3}
+  m_Name: Enemy_Trail_Projectile
+  m_Shader: {fileID: 4800000, guid: fbe2892d489e648499e7422ce4bbe62e, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -16,7 +16,7 @@ Material:
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
-  m_CustomRenderQueue: -1
+  m_CustomRenderQueue: 3000
   stringTagMap: {}
   disabledShaderPasses: []
   m_LockedProperties: 
@@ -24,10 +24,14 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _TextureSample0:
-        m_Texture: {fileID: 2800000, guid: c61e12b00f19ecd448a748ee4f011b63, type: 3}
+        m_Texture: {fileID: 2800000, guid: 9f9e4aca8bab2b74aaed6715f75873ef, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Ints: []
-    m_Floats: []
-    m_Colors: []
+    m_Floats:
+    - _Float0: 1
+    - _Float2: 6.04
+    - _HDR: 29.33
+    m_Colors:
+    - _Vector0: {r: 6.33, g: 0, b: 0, a: 0}
   m_BuildTextureStacks: []
