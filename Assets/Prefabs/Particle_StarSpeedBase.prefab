@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 2496552187183388908}
   - component: {fileID: 5969369303181564047}
   m_Layer: 0
-  m_Name: Particle_StarSpeed
+  m_Name: Particle_StarSpeedBase
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
