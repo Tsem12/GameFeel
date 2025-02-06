@@ -395,7 +395,11 @@ public class Player : MonoBehaviour
             Collider2D r = Physics2D.OverlapCircle(_player.transform.position, PerfectDodgeRadius, _dodgeLayer);
             if (r != null)
             {
-                onDashPerfect?.Invoke();
+                if (GameManager.Instance.enableJuice)
+                {
+                    onDashPerfect?.Invoke();
+                }
+                r.GetComponent<Bullet>()?.Dodged();
             }
         }
 
