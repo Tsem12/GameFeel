@@ -4,7 +4,6 @@ using UnityEngine.Events;
 
 public class Player : MonoBehaviour
 {
-
     [SerializeField] private Bullet bulletPrefab;
     [SerializeField] private Transform shootAt;
     [SerializeField] private float shootCooldown = 1f;
@@ -50,8 +49,7 @@ public class Player : MonoBehaviour
 
     private void Shoot()
     {
-        Bullet bullet = Instantiate(bulletPrefab, shootAt.position, Quaternion.identity);
-        Destroy(bullet, 10f);
+        Instantiate(bulletPrefab, shootAt.position, Quaternion.identity);
         lastShootTimestamp = Time.time;
     }
 
@@ -102,13 +100,13 @@ public class Player : MonoBehaviour
         Gizmos.DrawWireSphere(transform.position, playerMovementStateMachine.DashingState.PerfectDodgeRadius);
     }
 
-    private void OnGUI()
-    {
-        GUI.Label(new Rect(10, 10, Screen.width, Screen.height), $"_stateMachine.currentState: {playerMovementStateMachine.CurrentState}\n" +
-                                                                 $"_stateMachine.Velocity: {playerMovementStateMachine.Velocity}\n" +
-                                                                 $"_stateMachine.MoveDir: {playerMovementStateMachine.MoveDir}\n" +
-                                                                 $"_stateMachine.XValue: {playerMovementStateMachine.XValue}\n");
-    }
+    // private void OnGUI()
+    // {
+    //     GUI.Label(new Rect(10, 10, Screen.width, Screen.height), $"_stateMachine.currentState: {playerMovementStateMachine.CurrentState}\n" +
+    //                                                              $"_stateMachine.Velocity: {playerMovementStateMachine.Velocity}\n" +
+    //                                                              $"_stateMachine.MoveDir: {playerMovementStateMachine.MoveDir}\n" +
+    //                                                              $"_stateMachine.XValue: {playerMovementStateMachine.XValue}\n");
+    // }
     
     [Serializable]
     private class PlayerMovementStateMachine
@@ -393,7 +391,7 @@ public class Player : MonoBehaviour
             onDashStart?.Invoke();
 
             Collider2D r = Physics2D.OverlapCircle(_player.transform.position, PerfectDodgeRadius, _dodgeLayer);
-            if (r != null)
+            if (r)
             {
                 onDashPerfect?.Invoke();
             }
