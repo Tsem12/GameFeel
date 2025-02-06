@@ -60,7 +60,9 @@ public class Player : MonoBehaviour
         if (!collision.gameObject.CompareTag(collideWithTag) || IsInvicible) return;
         Destroy(collision.gameObject);
 
-        OnTakeDamage?.Invoke();
+        if (GameManager.Instance.enableJuice)
+            OnTakeDamage?.Invoke();
+
         OnTakeDamageAction?.Invoke();
         CheckLives();
     }
@@ -71,13 +73,16 @@ public class Player : MonoBehaviour
         switch(numberOfLives)
         {
             case 2:
-                onFirstLifeLost?.Invoke();
+                if (GameManager.Instance.enableJuice)
+                    onFirstLifeLost?.Invoke();
                 break;
             case 1:
-                onSecondLifeLost?.Invoke();
+                if (GameManager.Instance.enableJuice)
+                    onSecondLifeLost?.Invoke();
                 break;
             default:
-                GameManager.Instance.PlayGameOver();
+                if (GameManager.Instance.enableJuice)
+                    GameManager.Instance.PlayGameOver();
                 break;
 
         }
