@@ -35,6 +35,7 @@ public class ScoreManager : MonoBehaviour
     public static Action<Multipliers.Multiplier> onMultiplierChange;
     [SerializeField, Range(0f, 10f)] private float _multiplierDuration;
     [SerializeField] private Slider _multiplierSlider;
+    [SerializeField] private Slider _multiplierSlider2;
 
     private float _multiplierTimer;
     private int _multiplier;
@@ -80,6 +81,9 @@ public class ScoreManager : MonoBehaviour
 
         if (_multiplierSlider != null)
             _multiplierSlider.maxValue = _multiplierDuration;
+
+        if (_multiplierSlider2 != null)
+            _multiplierSlider2.maxValue = _multiplierDuration;
     }
 
     // Update is called once per frame
@@ -124,11 +128,13 @@ public class ScoreManager : MonoBehaviour
     private void OnEnable()
     {
         Invader.OnDeathAction += DestroyedInvader;
+        Player.OnTakeDamageAction += DecreaseMultiplier;
     }
 
     private void OnDisable()
     {
         Invader.OnDeathAction -= DestroyedInvader;
+        Player.OnTakeDamageAction -= DecreaseMultiplier;
     }
 
     private void DestroyedInvader(Invader invader)
@@ -143,26 +149,32 @@ public class ScoreManager : MonoBehaviour
 
     private void IncreaseMultiplier()
     {
+        if (GameManager.Instance.enableJuice)
+            onMultiplierIncrease?.Invoke();
 
         if (IsOnLastMultiplier() && _multiplier == GetMultiplierFromScriptable())
             return;
 
-        if(_multiplier < GetMaxMultiplier())
+        if(_multiplier < GetMaxMultiplier()){
             _multiplier++;
+        }
 
         if (_multiplier > GetMultiplierFromScriptable())
             _currentMultiplierIndex++;
 
-        onMultiplierChange?.Invoke(_multipliersScriptable.multipliers[_currentMultiplierIndex]);
+        if (GameManager.Instance.enableJuice)
+            onMultiplierChange?.Invoke(_multipliersScriptable.multipliers[_currentMultiplierIndex]);
         
 
         switch(_multiplier)
         {
             case 5:
-                onMultiplierIncreaseToX5?.Invoke();
+                if (GameManager.Instance.enableJuice)
+                    onMultiplierIncreaseToX5?.Invoke();
                 break;
             case 15:
-                onMultiplierIncreaseToX15?.Invoke();
+                if (GameManager.Instance.enableJuice)
+                    onMultiplierIncreaseToX15?.Invoke();
                 break;
         }
 
@@ -182,33 +194,61 @@ public class ScoreManager : MonoBehaviour
             _multiplier = _multipliersScriptable.multipliers[_currentMultiplierIndex].multiplier;
         }
 
-        onMultiplierDecrease?.Invoke();
+        if(GameManager.Instance.enableJuice)
+            onMultiplierDecrease?.Invoke();
 
         switch (_multiplier)
         {
             case 1:
-                onMultiplierDecreaseToX1?.Invoke();
+                if (GameManager.Instance.enableJuice)
+                    onMultiplierDecreaseToX1?.Invoke();
                 break;
             case 5:
-                onMultiplierDecreaseToX5?.Invoke();
+                if (GameManager.Instance.enableJuice)
+                    onMultiplierDecreaseToX5?.Invoke();
                 break;
         }
 
 
         UpdateTextMultiplier();
+        _multiplierTimer = _multiplierDuration;
     }
 
     public void AddScore(int value)
     {
         _score += value * _multiplier;
-        onScoreChange?.Invoke();
+        if (GameManager.Instance.enableJuice)
+            onScoreChange?.Invoke();
 
     }
 
     private void UpdateTextScore()
     {
-        if (_scoreText != null)
-            _scoreText.text = _displayedScore.ToString();
+        if (_scoreText == null)
+            return;
+        string scoreToDisplay = "";
+        switch(_displayedScore.ToString().Length)
+        {
+            case 1:
+                scoreToDisplay = "00000" + _displayedScore;
+                break;
+            case 2:
+                scoreToDisplay = "0000" + _displayedScore;
+                break;
+            case 3:
+                scoreToDisplay = "000" + _displayedScore;
+                break;
+            case 4:
+                scoreToDisplay = "00" + _displayedScore;
+                break;
+            case 5:
+                scoreToDisplay = "0" + _displayedScore;
+                break;
+            default:
+                scoreToDisplay = _displayedScore.ToString();
+                break;
+        }
+        _scoreText.text = scoreToDisplay;
     } 
     private void UpdateTextMultiplier()
     {
@@ -218,7 +258,10 @@ public class ScoreManager : MonoBehaviour
 
     private void UpdateSliderMultiplier()
     {
-        if (_multiplierSlider != null)
+        if(_multiplierSlider != null)
             _multiplierSlider.value = _multiplierTimer;
+
+        if (_multiplierSlider2 != null)
+            _multiplierSlider2.value = _multiplierTimer;
     }
 }

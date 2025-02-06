@@ -20,6 +20,8 @@ public class Player : MonoBehaviour
     [SerializeField, Min(0f)] private int numberOfLives = 3;
     public UnityEvent onFirstLifeLost;
     public UnityEvent onSecondLifeLost;
+    public UnityEvent OnTakeDamage;
+    public static Action OnTakeDamageAction;
     #endregion
 
     private void Start()
@@ -58,6 +60,10 @@ public class Player : MonoBehaviour
         if (!collision.gameObject.CompareTag(collideWithTag) || IsInvicible) return;
         Destroy(collision.gameObject);
 
+        if (GameManager.Instance.enableJuice)
+            OnTakeDamage?.Invoke();
+
+        OnTakeDamageAction?.Invoke();
         CheckLives();
     }
 
@@ -67,13 +73,16 @@ public class Player : MonoBehaviour
         switch(numberOfLives)
         {
             case 2:
-                onFirstLifeLost?.Invoke();
+                if (GameManager.Instance.enableJuice)
+                    onFirstLifeLost?.Invoke();
                 break;
             case 1:
-                onSecondLifeLost?.Invoke();
+                if (GameManager.Instance.enableJuice)
+                    onSecondLifeLost?.Invoke();
                 break;
             default:
-                GameManager.Instance.PlayGameOver();
+                if (GameManager.Instance.enableJuice)
+                    GameManager.Instance.PlayGameOver();
                 break;
 
         }
@@ -393,7 +402,11 @@ public class Player : MonoBehaviour
             Collider2D r = Physics2D.OverlapCircle(_player.transform.position, PerfectDodgeRadius, _dodgeLayer);
             if (r)
             {
-                onDashPerfect?.Invoke();
+                if (GameManager.Instance.enableJuice)
+                {
+                    onDashPerfect?.Invoke();
+                }
+                r.GetComponent<Bullet>()?.Dodged();
             }
         }
 
