@@ -1388,6 +1388,9 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  OnTakeDamage:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!58 &6567481879381926498
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -1456,6 +1459,7 @@ Transform:
   m_Children:
   - {fileID: 7551827540904576679}
   - {fileID: 1023979827590285164}
+  - {fileID: 1166646843828631914}
   m_Father: {fileID: 4905715445761255719}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &7145551023951880957
@@ -1896,4 +1900,78 @@ ParticleSystem:
 Transform:
   m_CorrespondingSourceObject: {fileID: 8497587447931160135, guid: 7bcbe96cdedfaf843b4db9b61582b1ed, type: 3}
   m_PrefabInstance: {fileID: 2098683886478311648}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &3497035325653206782
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 5604199491577259468}
+    m_Modifications:
+    - target: {fileID: 2357410131671596948, guid: b6ae6ad0dbd301f4391d4f0e23b61c3d, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.32068086
+      objectReference: {fileID: 0}
+    - target: {fileID: 2357410131671596948, guid: b6ae6ad0dbd301f4391d4f0e23b61c3d, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1.0714909
+      objectReference: {fileID: 0}
+    - target: {fileID: 2357410131671596948, guid: b6ae6ad0dbd301f4391d4f0e23b61c3d, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.32068086
+      objectReference: {fileID: 0}
+    - target: {fileID: 2357410131671596948, guid: b6ae6ad0dbd301f4391d4f0e23b61c3d, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.003
+      objectReference: {fileID: 0}
+    - target: {fileID: 2357410131671596948, guid: b6ae6ad0dbd301f4391d4f0e23b61c3d, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -1.0950003
+      objectReference: {fileID: 0}
+    - target: {fileID: 2357410131671596948, guid: b6ae6ad0dbd301f4391d4f0e23b61c3d, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2357410131671596948, guid: b6ae6ad0dbd301f4391d4f0e23b61c3d, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.00006026541
+      objectReference: {fileID: 0}
+    - target: {fileID: 2357410131671596948, guid: b6ae6ad0dbd301f4391d4f0e23b61c3d, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2357410131671596948, guid: b6ae6ad0dbd301f4391d4f0e23b61c3d, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2357410131671596948, guid: b6ae6ad0dbd301f4391d4f0e23b61c3d, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2357410131671596948, guid: b6ae6ad0dbd301f4391d4f0e23b61c3d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2357410131671596948, guid: b6ae6ad0dbd301f4391d4f0e23b61c3d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2357410131671596948, guid: b6ae6ad0dbd301f4391d4f0e23b61c3d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 179.993
+      objectReference: {fileID: 0}
+    - target: {fileID: 3020967323371942916, guid: b6ae6ad0dbd301f4391d4f0e23b61c3d, type: 3}
+      propertyPath: m_Name
+      value: Trail_Spaceship
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: b6ae6ad0dbd301f4391d4f0e23b61c3d, type: 3}
+--- !u!4 &1166646843828631914 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2357410131671596948, guid: b6ae6ad0dbd301f4391d4f0e23b61c3d, type: 3}
+  m_PrefabInstance: {fileID: 3497035325653206782}
   m_PrefabAsset: {fileID: 0}
