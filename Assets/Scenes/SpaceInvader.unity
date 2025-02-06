@@ -685,6 +685,10 @@ PrefabInstance:
       value: Wave
       objectReference: {fileID: 0}
     - target: {fileID: 7126856771662106672, guid: f7e3a5a0d66486544afe2053d2eab77b, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7126856771662106672, guid: f7e3a5a0d66486544afe2053d2eab77b, type: 3}
       propertyPath: shootRandomMax.x
       value: 0
       objectReference: {fileID: 0}
