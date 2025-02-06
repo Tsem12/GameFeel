@@ -21,6 +21,9 @@ public class GameManager : MonoBehaviour
     [SerializeField] private float gameOverHeight;
 
     public static Action onGamefeelChanged;
+    public static Action onGameOver;
+
+    [SerializeField] private CanvasGroup _menu;
 
     public GAMEFEEL_ACTIVATION _gamefeelActivation = GAMEFEEL_ACTIVATION.Combo | GAMEFEEL_ACTIVATION.Invader | GAMEFEEL_ACTIVATION.Player;
 
@@ -82,7 +85,15 @@ public class GameManager : MonoBehaviour
     public void PlayGameOver()
     {
         Debug.Log("Game Over");
-        //Time.timeScale = 0f;
+        if ((GameManager.Instance.GamefeelActivation & GameManager.GAMEFEEL_ACTIVATION.Player) ==
+            GameManager.GAMEFEEL_ACTIVATION.Player)
+        {
+            onGameOver?.Invoke();
+        }
+        else
+        {
+            _menu.alpha = 1;
+        }
     }
 
     public void OnDrawGizmos()

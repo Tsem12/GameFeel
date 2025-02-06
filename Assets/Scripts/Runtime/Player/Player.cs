@@ -10,6 +10,7 @@ public class Player : MonoBehaviour
     [SerializeField] private float shootCooldown = 1f;
     [SerializeField] private string collideWithTag = "Untagged";
     [SerializeField] private MMF_Player wigglePlayer;
+    [SerializeField] private Rigidbody2D _rb;
 
     [SerializeField] private UnityEvent OnShoot;
     
@@ -26,7 +27,14 @@ public class Player : MonoBehaviour
     public UnityEvent onSecondLifeLost;
     public UnityEvent OnTakeDamage;
     public static Action OnTakeDamageAction;
+
+    private bool _isDead;
     #endregion
+
+    private void Awake()
+    {
+        _rb = GetComponent<Rigidbody2D>();
+    }
 
     private void Start()
     {
@@ -51,6 +59,9 @@ public class Player : MonoBehaviour
 
     private void UpdateMovement()
     {
+        if(_isDead)
+            return;
+        
         playerMovementStateMachine?.Update(Time.deltaTime);
     }
 
@@ -99,8 +110,9 @@ public class Player : MonoBehaviour
                     onSecondLifeLost?.Invoke();
                 break;
             default:
-                if ((GameManager.Instance.GamefeelActivation & GameManager.GAMEFEEL_ACTIVATION.Player) == GameManager.GAMEFEEL_ACTIVATION.Player)
-                    GameManager.Instance.PlayGameOver();
+                _rb.bodyType = RigidbodyType2D.Dynamic;
+                GameManager.Instance.PlayGameOver();
+                _isDead = true;
                 break;
         }
     }
