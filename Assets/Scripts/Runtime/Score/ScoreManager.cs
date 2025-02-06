@@ -128,11 +128,13 @@ public class ScoreManager : MonoBehaviour
     private void OnEnable()
     {
         Invader.OnDeathAction += DestroyedInvader;
+        Player.OnTakeDamageAction += DecreaseMultiplier;
     }
 
     private void OnDisable()
     {
         Invader.OnDeathAction -= DestroyedInvader;
+        Player.OnTakeDamageAction -= DecreaseMultiplier;
     }
 
     private void DestroyedInvader(Invader invader)
@@ -202,6 +204,7 @@ public class ScoreManager : MonoBehaviour
 
 
         UpdateTextMultiplier();
+        _multiplierTimer = _multiplierDuration;
     }
 
     public void AddScore(int value)

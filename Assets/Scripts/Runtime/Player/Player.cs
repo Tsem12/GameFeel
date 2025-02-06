@@ -21,6 +21,8 @@ public class Player : MonoBehaviour
     [SerializeField, Min(0f)] private int numberOfLives = 3;
     public UnityEvent onFirstLifeLost;
     public UnityEvent onSecondLifeLost;
+    public UnityEvent OnTakeDamage;
+    public static Action OnTakeDamageAction;
     #endregion
 
     private void Start()
@@ -60,6 +62,8 @@ public class Player : MonoBehaviour
         if (!collision.gameObject.CompareTag(collideWithTag) || IsInvicible) return;
         Destroy(collision.gameObject);
 
+        OnTakeDamage?.Invoke();
+        OnTakeDamageAction?.Invoke();
         CheckLives();
     }
 
