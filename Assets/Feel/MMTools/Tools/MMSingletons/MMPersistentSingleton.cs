@@ -11,6 +11,7 @@ namespace MoreMountains.Tools
 		/// if this is true, this singleton will auto detach if it finds itself parented on awake
 		[Tooltip("if this is true, this singleton will auto detach if it finds itself parented on awake")]
 		public bool AutomaticallyUnparentOnAwake = true;
+		public bool DontDestoyOnLoad = true;
 		
 		public static bool HasInstance => _instance != null;
 		public static T Current => _instance;
@@ -67,7 +68,10 @@ namespace MoreMountains.Tools
 			{
 				//If I am the first instance, make me the Singleton
 				_instance = this as T;
-				DontDestroyOnLoad (transform.gameObject);
+				if (DontDestoyOnLoad)
+				{
+					DontDestroyOnLoad (transform.gameObject);
+				}
 				_enabled = true;
 			}
 			else

@@ -110,7 +110,7 @@ public class ScoreManager : MonoBehaviour
             return;
 
         UpdateSliderMultiplier();
-
+        
         if (_multiplierTimer > 0)
         {
             _multiplierTimer -= Time.deltaTime;
@@ -166,7 +166,7 @@ public class ScoreManager : MonoBehaviour
 
     private void IncreaseMultiplier()
     {
-        if ((GameManager.Instance.GamefeelActivation & GameManager.GAMEFEEL_ACTIVATION.Combo) == GameManager.GAMEFEEL_ACTIVATION.Combo)
+        if (!GameManager.Instance._isGameOver && (GameManager.Instance.GamefeelActivation & GameManager.GAMEFEEL_ACTIVATION.Combo) == GameManager.GAMEFEEL_ACTIVATION.Combo)
             onMultiplierIncrease?.Invoke();
 
         if (IsOnLastMultiplier() && _multiplier == GetMultiplierFromScriptable())
@@ -193,11 +193,11 @@ public class ScoreManager : MonoBehaviour
         switch (_multiplier)
         {
             case 5:
-                if ((GameManager.Instance.GamefeelActivation & GameManager.GAMEFEEL_ACTIVATION.Combo) == GameManager.GAMEFEEL_ACTIVATION.Combo)
+                if (!GameManager.Instance._isGameOver &&(GameManager.Instance.GamefeelActivation & GameManager.GAMEFEEL_ACTIVATION.Combo) == GameManager.GAMEFEEL_ACTIVATION.Combo)
                     onMultiplierIncreaseToX5?.Invoke();
                 break;
             case 15:
-                if ((GameManager.Instance.GamefeelActivation & GameManager.GAMEFEEL_ACTIVATION.Combo) == GameManager.GAMEFEEL_ACTIVATION.Combo)
+                if (!GameManager.Instance._isGameOver &&(GameManager.Instance.GamefeelActivation & GameManager.GAMEFEEL_ACTIVATION.Combo) == GameManager.GAMEFEEL_ACTIVATION.Combo)
                     onMultiplierIncreaseToX15?.Invoke();
                 break;
         }
@@ -216,7 +216,7 @@ public class ScoreManager : MonoBehaviour
             _multiplier = _multipliersScriptable.multipliers[_currentMultiplierIndex].multiplier;
         }
 
-        if ((GameManager.Instance.GamefeelActivation & GameManager.GAMEFEEL_ACTIVATION.Combo) == GameManager.GAMEFEEL_ACTIVATION.Combo)
+        if (!GameManager.Instance._isGameOver &&(GameManager.Instance.GamefeelActivation & GameManager.GAMEFEEL_ACTIVATION.Combo) == GameManager.GAMEFEEL_ACTIVATION.Combo)
             onMultiplierDecrease?.Invoke();
 
         InvokeEventDecreaseMultiplier();
@@ -230,11 +230,11 @@ public class ScoreManager : MonoBehaviour
         switch (_multiplier)
         {
             case 1:
-                if ((GameManager.Instance.GamefeelActivation & GameManager.GAMEFEEL_ACTIVATION.Combo) == GameManager.GAMEFEEL_ACTIVATION.Combo)
+                if (!GameManager.Instance._isGameOver &&(GameManager.Instance.GamefeelActivation & GameManager.GAMEFEEL_ACTIVATION.Combo) == GameManager.GAMEFEEL_ACTIVATION.Combo)
                     onMultiplierDecreaseToX1?.Invoke();
                 break;
             case 5:
-                if ((GameManager.Instance.GamefeelActivation & GameManager.GAMEFEEL_ACTIVATION.Combo) == GameManager.GAMEFEEL_ACTIVATION.Combo)
+                if (!GameManager.Instance._isGameOver &&(GameManager.Instance.GamefeelActivation & GameManager.GAMEFEEL_ACTIVATION.Combo) == GameManager.GAMEFEEL_ACTIVATION.Combo)
                     onMultiplierDecreaseToX5?.Invoke();
                 break;
         }

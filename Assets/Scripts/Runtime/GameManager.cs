@@ -1,6 +1,7 @@
 using System;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
 
@@ -21,11 +22,13 @@ public class GameManager : MonoBehaviour
     [SerializeField] private float gameOverHeight;
 
     public static Action onGamefeelChanged;
-    public static Action onGameOver;
+    public UnityEvent onGameOver;
 
     [SerializeField] private CanvasGroup _menu;
 
     public GAMEFEEL_ACTIVATION _gamefeelActivation = GAMEFEEL_ACTIVATION.Combo | GAMEFEEL_ACTIVATION.Invader | GAMEFEEL_ACTIVATION.Player;
+
+    public bool _isGameOver;
 
     void Awake()
     {
@@ -84,16 +87,22 @@ public class GameManager : MonoBehaviour
 
     public void PlayGameOver()
     {
+        if(_isGameOver)
+            return;
+        _isGameOver = true;
         Debug.Log("Game Over");
         if ((GameManager.Instance.GamefeelActivation & GameManager.GAMEFEEL_ACTIVATION.Player) ==
             GameManager.GAMEFEEL_ACTIVATION.Player)
         {
+            _menu.interactable = true;
             onGameOver?.Invoke();
         }
         else
         {
+            _menu.interactable = true;
             _menu.alpha = 1;
         }
+
     }
 
     public void OnDrawGizmos()

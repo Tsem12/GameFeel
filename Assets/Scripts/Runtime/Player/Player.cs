@@ -40,21 +40,29 @@ public class Player : MonoBehaviour
     {
         playerMovementStateMachine.Initialize(this);
         GameManager.onGamefeelChanged += OnGameFeelChanged;
+        GameManager.Instance.onGameOver.AddListener(() => _rb.bodyType = RigidbodyType2D.Dynamic);
     }
+    
+    
 
     private void Update()
     {
+        if(_isDead)
+            return;
+        
         UpdateMovement();
         UpdateActions();
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             MenuManager.Instance.OpenMenu(!MenuManager.Instance.IsMenuOpen);
         }
+        Debug.Log(playerMovementStateMachine.DashingState._dodgeParticule.isPlaying);
     }
 
     private void OnDestroy()
     {
         GameManager.onGamefeelChanged -= OnGameFeelChanged;
+        GameManager.Instance.onGameOver.RemoveAllListeners();
     }
 
     private void UpdateMovement()
@@ -98,6 +106,9 @@ public class Player : MonoBehaviour
 
     private void CheckLives()
     {
+        if(_isDead)
+            return;
+        
         numberOfLives--;
         switch(numberOfLives)
         {
@@ -169,6 +180,7 @@ public class Player : MonoBehaviour
         [SerializeField] private float velocityMultiplier;
         [SerializeField] private float maxRotationangle;
         [SerializeField, Min(0f)] private float dashCooldown;
+
         
         [Header("States parameters")]
         [SerializeField] private IdleMovementState idleState;
@@ -417,6 +429,7 @@ public class Player : MonoBehaviour
 
         [SerializeField] private UnityEvent onDashStart;
         [SerializeField] private UnityEvent onDashEnd;
+        [SerializeField] public ParticleSystem _dodgeParticule;
         
         [Header("PerfectDodge")]
         [SerializeField] private float _perfectDodgeRadius;
@@ -437,6 +450,7 @@ public class Player : MonoBehaviour
                 _stateMachine.ChangeState(PlayerMovementStateType.Accelerating);
             }
         }
+        
 
         public override void StartState(PlayerMovementStateType previousState)
         {
@@ -444,6 +458,11 @@ public class Player : MonoBehaviour
             startMoveDir = _stateMachine.MoveDir;
             _player.IsInvicible = true;
             onDashStart?.Invoke();
+
+            if ((GameManager.Instance.GamefeelActivation & GameManager.GAMEFEEL_ACTIVATION.Player) == GameManager.GAMEFEEL_ACTIVATION.Player)
+            {
+                _dodgeParticule.Play();
+            }
 
             Collider2D r = Physics2D.OverlapCircle(_player.transform.position, PerfectDodgeRadius, _dodgeLayer);
             if (r)
@@ -463,6 +482,7 @@ public class Player : MonoBehaviour
             _player.IsInvicible = false;
             _stateMachine.ResetDashCooldown();
             onDashEnd?.Invoke();
+            _dodgeParticule.Stop();
         }
     }
 }
