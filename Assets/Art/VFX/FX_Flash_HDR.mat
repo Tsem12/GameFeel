@@ -45,7 +45,7 @@ Material:
     - _D_Speed_Y: 0.2
     - _D_Tile_X: 1
     - _D_Tile_Y: 1
-    - _HDR: 1
+    - _HDR: 0.75
     - _InvFade: 1
     - _L_MAX: -0.04
     - _L_Min: 2.5

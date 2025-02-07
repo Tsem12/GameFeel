@@ -195,7 +195,7 @@ Shader "FX_Flash_HDR"
 						i.color.a *= fade;
 					#endif
 
-					Gradient gradient28 = NewGradient( 0, 2, 2, float4( 0.6643062, 1, 0.5981132, 0 ), float4( 0.861687, 1, 0.8245283, 1 ), 0, 0, 0, 0, 0, 0, float2( 1, 0 ), float2( 1, 1 ), 0, 0, 0, 0, 0, 0 );
+					Gradient gradient28 = NewGradient( 0, 2, 2, float4( 0.6886792, 0.04223035, 0.04781708, 0 ), float4( 0.8396226, 0.3769536, 0.3128782, 1 ), 0, 0, 0, 0, 0, 0, float2( 1, 0 ), float2( 1, 1 ), 0, 0, 0, 0, 0, 0 );
 					float2 appendResult8 = (float2(_D_Speed_X , _D_Speed_Y));
 					float2 texCoord3 = i.texcoord.xy * float2( 1,1 ) + float2( 0,0 );
 					float2 appendResult4 = (float2(_D_Tile_X , _D_Tile_Y));
@@ -240,7 +240,7 @@ Node;AmplifyShaderEditor.RangedFloatNode;15;-1408,-16;Inherit;False;Property;_L_
 Node;AmplifyShaderEditor.SimpleMultiplyOpNode;20;-704,320;Inherit;False;2;2;0;FLOAT3;0,0,0;False;1;FLOAT;0;False;1;FLOAT3;0
 Node;AmplifyShaderEditor.ComponentMaskNode;21;-944,416;Inherit;False;False;False;False;True;1;0;COLOR;0,0,0,0;False;1;FLOAT;0
 Node;AmplifyShaderEditor.SmoothstepOpNode;18;-1136,-272;Inherit;True;3;0;FLOAT;0;False;1;FLOAT;0;False;2;FLOAT;1;False;1;FLOAT;0
-Node;AmplifyShaderEditor.GradientNode;28;-960,-432;Inherit;False;0;2;2;0.6643062,1,0.5981132,0;0.861687,1,0.8245283,1;1,0;1,1;0;1;OBJECT;0
+Node;AmplifyShaderEditor.GradientNode;28;-960,-432;Inherit;False;0;2;2;0.6886792,0.04223035,0.04781708,0;0.8396226,0.3769536,0.3128782,1;1,0;1,1;0;1;OBJECT;0
 Node;AmplifyShaderEditor.DynamicAppendNode;23;-528,320;Inherit;False;FLOAT4;4;0;FLOAT3;0,0,0;False;1;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;1;FLOAT4;0
 Node;AmplifyShaderEditor.GradientSampleNode;27;-672,-240;Inherit;True;2;0;OBJECT;;False;1;FLOAT;0;False;5;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
 Node;AmplifyShaderEditor.SimpleMultiplyOpNode;24;-256,-64;Inherit;True;2;2;0;COLOR;0,0,0,0;False;1;FLOAT4;0,0,0,0;False;1;COLOR;0
@@ -271,4 +271,4 @@ WireConnection;24;0;27;0
 WireConnection;24;1;23;0
 WireConnection;0;0;24;0
 ASEEND*/
-//CHKSM=145600EF77EDD717FBA95C31FF32093689A82E37
+//CHKSM=13D94B3A0F8797636D71BF2E5A18034E930BEF85
