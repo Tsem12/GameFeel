@@ -56,7 +56,6 @@ public class Player : MonoBehaviour
         {
             MenuManager.Instance.OpenMenu(!MenuManager.Instance.IsMenuOpen);
         }
-        Debug.Log(playerMovementStateMachine.DashingState._dodgeParticule.isPlaying);
     }
 
     private void OnDestroy()
@@ -67,9 +66,6 @@ public class Player : MonoBehaviour
 
     private void UpdateMovement()
     {
-        if(_isDead)
-            return;
-        
         playerMovementStateMachine?.Update(Time.deltaTime);
     }
 
@@ -163,13 +159,13 @@ public class Player : MonoBehaviour
         }
     }
     
-    // private void OnGUI()
-    // {
-    //     GUI.Label(new Rect(10, 10, Screen.width, Screen.height), $"_stateMachine.currentState: {playerMovementStateMachine.CurrentState}\n" +
-    //                                                              $"_stateMachine.Velocity: {playerMovementStateMachine.Velocity}\n" +
-    //                                                              $"_stateMachine.MoveDir: {playerMovementStateMachine.MoveDir}\n" +
-    //                                                              $"_stateMachine.XValue: {playerMovementStateMachine.XValue}\n");
-    // }
+    private void OnGUI()
+    {
+        GUI.Label(new Rect(10, 10, Screen.width, Screen.height), $"_stateMachine.currentState: {playerMovementStateMachine.CurrentState}\n" +
+                                                                 $"_stateMachine.Velocity: {playerMovementStateMachine.Velocity}\n" +
+                                                                 $"_stateMachine.MoveDir: {playerMovementStateMachine.MoveDir}\n" +
+                                                                 $"_stateMachine.XValue: {playerMovementStateMachine.XValue}\n");
+    }
     
     [Serializable]
     private class PlayerMovementStateMachine
@@ -291,11 +287,7 @@ public class Player : MonoBehaviour
     {
         public override void Update(float deltaTime)
         {
-            if (_stateMachine.IsDashing)
-            {
-                _stateMachine.ChangeState(PlayerMovementStateType.Dashing);
-            }
-            else if (_stateMachine.MoveDir != 0)
+            if (_stateMachine.MoveDir != 0)
             {
                 _stateMachine.ChangeState(PlayerMovementStateType.Accelerating);
             }
@@ -429,7 +421,6 @@ public class Player : MonoBehaviour
 
         [SerializeField] private UnityEvent onDashStart;
         [SerializeField] private UnityEvent onDashEnd;
-        [SerializeField] public ParticleSystem _dodgeParticule;
         
         [Header("PerfectDodge")]
         [SerializeField] private float _perfectDodgeRadius;
@@ -457,11 +448,11 @@ public class Player : MonoBehaviour
             timerCount = 0;
             startMoveDir = _stateMachine.MoveDir;
             _player.IsInvicible = true;
-            onDashStart?.Invoke();
+            _stateMachine.ResetDashCooldown();
 
             if ((GameManager.Instance.GamefeelActivation & GameManager.GAMEFEEL_ACTIVATION.Player) == GameManager.GAMEFEEL_ACTIVATION.Player)
             {
-                _dodgeParticule.Play();
+                onDashStart?.Invoke();
             }
 
             Collider2D r = Physics2D.OverlapCircle(_player.transform.position, PerfectDodgeRadius, _dodgeLayer);
@@ -480,9 +471,10 @@ public class Player : MonoBehaviour
             _stateMachine.Velocity = 1f;
             _stateMachine.XValue = _stateMachine.MoveDir;
             _player.IsInvicible = false;
-            _stateMachine.ResetDashCooldown();
-            onDashEnd?.Invoke();
-            _dodgeParticule.Stop();
+            if ((GameManager.Instance.GamefeelActivation & GameManager.GAMEFEEL_ACTIVATION.Player) == GameManager.GAMEFEEL_ACTIVATION.Player)
+            {
+                onDashEnd?.Invoke();
+            }
         }
     }
 }
