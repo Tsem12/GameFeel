@@ -1,4 +1,5 @@
 using System;
+using MoreMountains.Feedbacks;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -8,10 +9,14 @@ public class Player : MonoBehaviour
     [SerializeField] private Transform shootAt;
     [SerializeField] private float shootCooldown = 1f;
     [SerializeField] private string collideWithTag = "Untagged";
+    [SerializeField] private MMF_Player wigglePlayer;
+    [SerializeField] private Rigidbody2D _rb;
 
+    [SerializeField] private UnityEvent OnShoot;
+    
     private float lastShootTimestamp = Mathf.NegativeInfinity;
     public bool IsInvicible { get; set; }
-    
+
     [Header("Movement parameters")]
     [SerializeField] private PlayerMovementStateMachine playerMovementStateMachine;
 
@@ -22,25 +27,49 @@ public class Player : MonoBehaviour
     public UnityEvent onSecondLifeLost;
     public UnityEvent OnTakeDamage;
     public static Action OnTakeDamageAction;
+
+    private bool _isDead;
     #endregion
+
+    private void Awake()
+    {
+        _rb = GetComponent<Rigidbody2D>();
+    }
 
     private void Start()
     {
         playerMovementStateMachine.Initialize(this);
+        GameManager.onGamefeelChanged += OnGameFeelChanged;
+        GameManager.Instance.onGameOver.AddListener(() => _rb.bodyType = RigidbodyType2D.Dynamic);
     }
+    
+    
 
-    void Update()
+    private void Update()
     {
+        if(_isDead)
+            return;
+        
         UpdateMovement();
         UpdateActions();
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             MenuManager.Instance.OpenMenu(!MenuManager.Instance.IsMenuOpen);
         }
+        Debug.Log(playerMovementStateMachine.DashingState._dodgeParticule.isPlaying);
+    }
+
+    private void OnDestroy()
+    {
+        GameManager.onGamefeelChanged -= OnGameFeelChanged;
+        GameManager.Instance.onGameOver.RemoveAllListeners();
     }
 
     private void UpdateMovement()
     {
+        if(_isDead)
+            return;
+        
         playerMovementStateMachine?.Update(Time.deltaTime);
     }
 
@@ -55,6 +84,10 @@ public class Player : MonoBehaviour
 
     private void Shoot()
     {
+        if ((GameManager.Instance.GamefeelActivation & GameManager.GAMEFEEL_ACTIVATION.Player) == GameManager.GAMEFEEL_ACTIVATION.Player)
+        {
+            OnShoot?.Invoke();
+        }
         Instantiate(bulletPrefab, shootAt.position, Quaternion.identity);
         lastShootTimestamp = Time.time;
     }
@@ -64,7 +97,7 @@ public class Player : MonoBehaviour
         if (!collision.gameObject.CompareTag(collideWithTag) || IsInvicible) return;
         Destroy(collision.gameObject);
 
-        if (GameManager.Instance.enableJuice)
+        if ((GameManager.Instance.GamefeelActivation & GameManager.GAMEFEEL_ACTIVATION.Player) == GameManager.GAMEFEEL_ACTIVATION.Player)
             OnTakeDamage?.Invoke();
 
         OnTakeDamageAction?.Invoke();
@@ -73,22 +106,25 @@ public class Player : MonoBehaviour
 
     private void CheckLives()
     {
+        if(_isDead)
+            return;
+        
         numberOfLives--;
         switch(numberOfLives)
         {
             case 2:
-                if (GameManager.Instance.enableJuice)
+                if ((GameManager.Instance.GamefeelActivation & GameManager.GAMEFEEL_ACTIVATION.Player) == GameManager.GAMEFEEL_ACTIVATION.Player)
                     onFirstLifeLost?.Invoke();
                 break;
             case 1:
-                if (GameManager.Instance.enableJuice)
+                if ((GameManager.Instance.GamefeelActivation & GameManager.GAMEFEEL_ACTIVATION.Player) == GameManager.GAMEFEEL_ACTIVATION.Player)
                     onSecondLifeLost?.Invoke();
                 break;
             default:
-                if (GameManager.Instance.enableJuice)
-                    GameManager.Instance.PlayGameOver();
+                _rb.bodyType = RigidbodyType2D.Dynamic;
+                GameManager.Instance.PlayGameOver();
+                _isDead = true;
                 break;
-
         }
     }
     
@@ -113,6 +149,20 @@ public class Player : MonoBehaviour
         Gizmos.DrawWireSphere(transform.position, playerMovementStateMachine.DashingState.PerfectDodgeRadius);
     }
 
+    private void OnGameFeelChanged()
+    {
+        if ((GameManager.Instance.GamefeelActivation & GameManager.GAMEFEEL_ACTIVATION.Player) != GameManager.GAMEFEEL_ACTIVATION.Player)
+        {
+            wigglePlayer.StopFeedbacks();
+            wigglePlayer.RestoreInitialValues();
+            transform.rotation = Quaternion.identity;
+        }
+        else
+        {
+            wigglePlayer.PlayFeedbacks();
+        }
+    }
+    
     // private void OnGUI()
     // {
     //     GUI.Label(new Rect(10, 10, Screen.width, Screen.height), $"_stateMachine.currentState: {playerMovementStateMachine.CurrentState}\n" +
@@ -130,6 +180,7 @@ public class Player : MonoBehaviour
         [SerializeField] private float velocityMultiplier;
         [SerializeField] private float maxRotationangle;
         [SerializeField, Min(0f)] private float dashCooldown;
+
         
         [Header("States parameters")]
         [SerializeField] private IdleMovementState idleState;
@@ -172,7 +223,10 @@ public class Player : MonoBehaviour
                 currentDashCooldown -= deltaTime;
             }
             CurrentState?.Update(deltaTime);
-            _player.transform.rotation = Quaternion.Euler(0f, XValue * Sign(Velocity) * maxRotationangle, 0f);
+            if ((GameManager.Instance.GamefeelActivation & GameManager.GAMEFEEL_ACTIVATION.Player) == GameManager.GAMEFEEL_ACTIVATION.Player )
+            {
+                _player.transform.rotation = Quaternion.Euler(0f, XValue * Sign(Velocity) * maxRotationangle, 0f);
+            }
             Vector3 newPos = GameManager.Instance.KeepInBounds(_player.transform.position
                                                                + Vector3.right * (Velocity * velocityMultiplier * deltaTime));
             if (Mathf.Abs(_player.transform.position.x - newPos.x) < Mathf.Epsilon)
@@ -375,6 +429,7 @@ public class Player : MonoBehaviour
 
         [SerializeField] private UnityEvent onDashStart;
         [SerializeField] private UnityEvent onDashEnd;
+        [SerializeField] public ParticleSystem _dodgeParticule;
         
         [Header("PerfectDodge")]
         [SerializeField] private float _perfectDodgeRadius;
@@ -395,6 +450,7 @@ public class Player : MonoBehaviour
                 _stateMachine.ChangeState(PlayerMovementStateType.Accelerating);
             }
         }
+        
 
         public override void StartState(PlayerMovementStateType previousState)
         {
@@ -403,10 +459,15 @@ public class Player : MonoBehaviour
             _player.IsInvicible = true;
             onDashStart?.Invoke();
 
+            if ((GameManager.Instance.GamefeelActivation & GameManager.GAMEFEEL_ACTIVATION.Player) == GameManager.GAMEFEEL_ACTIVATION.Player)
+            {
+                _dodgeParticule.Play();
+            }
+
             Collider2D r = Physics2D.OverlapCircle(_player.transform.position, PerfectDodgeRadius, _dodgeLayer);
             if (r)
             {
-                if (GameManager.Instance.enableJuice)
+                if ((GameManager.Instance.GamefeelActivation & GameManager.GAMEFEEL_ACTIVATION.Player) == GameManager.GAMEFEEL_ACTIVATION.Player)
                 {
                     onDashPerfect?.Invoke();
                 }
@@ -421,6 +482,7 @@ public class Player : MonoBehaviour
             _player.IsInvicible = false;
             _stateMachine.ResetDashCooldown();
             onDashEnd?.Invoke();
+            _dodgeParticule.Stop();
         }
     }
 }

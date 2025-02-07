@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.Serialization;
 
 public class Wave : MonoBehaviour
@@ -52,6 +53,8 @@ public class Wave : MonoBehaviour
     List<Invader> invaders = new();
     List<Column> invaderPerColumn = new(); // Keeps track of invaders per column. A column will be removed if empty.
     List<Row> invaderPerRow = new(); // Keeps track of invaders per row. A row will be removed if empty.
+
+    public UnityEvent OnWaveClear;
 
     void Awake()
     {
@@ -246,6 +249,11 @@ public class Wave : MonoBehaviour
         if (invaders.Count <= 0)
         {
             _currentBaseDifficulty += _difficultyIncrease;
+            if ((GameManager.Instance._gamefeelActivation & GameManager.GAMEFEEL_ACTIVATION.Invader) ==
+                GameManager.GAMEFEEL_ACTIVATION.Invader)
+            {
+                OnWaveClear?.Invoke();
+            }
             CreateWave();
         }
     }
