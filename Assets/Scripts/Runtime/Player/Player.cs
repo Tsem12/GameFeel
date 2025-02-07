@@ -188,10 +188,12 @@ public class Player : MonoBehaviour
         [SerializeField] private DeceleratingMovementState deceleratingState;
         [SerializeField] private TurningBackMovementState turningBackState;
         [SerializeField] private DashingMovementState dashingState;
+        [SerializeField] private ParticleSystem _dashFX;
         
         
         public PlayerMovementStateType CurrentStateType { get; private set; }
         public PlayerMovementState CurrentState => GetState(CurrentStateType);
+        private bool canDashFx = true;
         
         public int MoveDir { get; private set; }
         public bool IsDashing { get; private set; }
@@ -221,6 +223,16 @@ public class Player : MonoBehaviour
             if (currentDashCooldown > 0)
             {
                 currentDashCooldown -= deltaTime;
+                if (canDashFx && currentDashCooldown <= 2f)
+                {
+                    _dashFX.Play();
+                    canDashFx = false;
+                }
+
+                if (currentDashCooldown <= 0)
+                {
+                    canDashFx = true;
+                }
             }
             CurrentState?.Update(deltaTime);
             if ((GameManager.Instance.GamefeelActivation & GameManager.GAMEFEEL_ACTIVATION.Player) == GameManager.GAMEFEEL_ACTIVATION.Player )
