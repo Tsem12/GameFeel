@@ -159,13 +159,13 @@ public class Player : MonoBehaviour
         }
     }
     
-    private void OnGUI()
-    {
-        GUI.Label(new Rect(10, 10, Screen.width, Screen.height), $"_stateMachine.currentState: {playerMovementStateMachine.CurrentState}\n" +
-                                                                 $"_stateMachine.Velocity: {playerMovementStateMachine.Velocity}\n" +
-                                                                 $"_stateMachine.MoveDir: {playerMovementStateMachine.MoveDir}\n" +
-                                                                 $"_stateMachine.XValue: {playerMovementStateMachine.XValue}\n");
-    }
+    // private void OnGUI()
+    // {
+    //     GUI.Label(new Rect(10, 10, Screen.width, Screen.height), $"_stateMachine.currentState: {playerMovementStateMachine.CurrentState}\n" +
+    //                                                              $"_stateMachine.Velocity: {playerMovementStateMachine.Velocity}\n" +
+    //                                                              $"_stateMachine.MoveDir: {playerMovementStateMachine.MoveDir}\n" +
+    //                                                              $"_stateMachine.XValue: {playerMovementStateMachine.XValue}\n");
+    // }
     
     [Serializable]
     private class PlayerMovementStateMachine
@@ -203,6 +203,7 @@ public class Player : MonoBehaviour
         public void Initialize(Player player)
         {
             _player = player;
+            ResetDashCooldown();
             idleState.Init(this, player);
             acceleratingState.Init(this, player);
             deceleratingState.Init(this, player);
