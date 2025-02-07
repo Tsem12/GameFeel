@@ -10,6 +10,7 @@ public class Player : MonoBehaviour
     [SerializeField] private float shootCooldown = 1f;
     [SerializeField] private string collideWithTag = "Untagged";
     [SerializeField] private MMF_Player wigglePlayer;
+    [SerializeField] private Rigidbody2D _rb;
 
     [SerializeField] private UnityEvent OnShoot;
     
@@ -26,16 +27,29 @@ public class Player : MonoBehaviour
     public UnityEvent onSecondLifeLost;
     public UnityEvent OnTakeDamage;
     public static Action OnTakeDamageAction;
+
+    private bool _isDead;
     #endregion
+
+    private void Awake()
+    {
+        _rb = GetComponent<Rigidbody2D>();
+    }
 
     private void Start()
     {
         playerMovementStateMachine.Initialize(this);
         GameManager.onGamefeelChanged += OnGameFeelChanged;
+        GameManager.Instance.onGameOver.AddListener(() => _rb.bodyType = RigidbodyType2D.Dynamic);
     }
+    
+    
 
     private void Update()
     {
+        if(_isDead)
+            return;
+        
         UpdateMovement();
         UpdateActions();
         if (Input.GetKeyDown(KeyCode.Escape))
@@ -47,6 +61,7 @@ public class Player : MonoBehaviour
     private void OnDestroy()
     {
         GameManager.onGamefeelChanged -= OnGameFeelChanged;
+        GameManager.Instance.onGameOver.RemoveAllListeners();
     }
 
     private void UpdateMovement()
@@ -87,6 +102,9 @@ public class Player : MonoBehaviour
 
     private void CheckLives()
     {
+        if(_isDead)
+            return;
+        
         numberOfLives--;
         switch(numberOfLives)
         {
@@ -99,8 +117,9 @@ public class Player : MonoBehaviour
                     onSecondLifeLost?.Invoke();
                 break;
             default:
-                if ((GameManager.Instance.GamefeelActivation & GameManager.GAMEFEEL_ACTIVATION.Player) == GameManager.GAMEFEEL_ACTIVATION.Player)
-                    GameManager.Instance.PlayGameOver();
+                _rb.bodyType = RigidbodyType2D.Dynamic;
+                GameManager.Instance.PlayGameOver();
+                _isDead = true;
                 break;
         }
     }
@@ -140,13 +159,13 @@ public class Player : MonoBehaviour
         }
     }
     
-    // private void OnGUI()
-    // {
-    //     GUI.Label(new Rect(10, 10, Screen.width, Screen.height), $"_stateMachine.currentState: {playerMovementStateMachine.CurrentState}\n" +
-    //                                                              $"_stateMachine.Velocity: {playerMovementStateMachine.Velocity}\n" +
-    //                                                              $"_stateMachine.MoveDir: {playerMovementStateMachine.MoveDir}\n" +
-    //                                                              $"_stateMachine.XValue: {playerMovementStateMachine.XValue}\n");
-    // }
+    private void OnGUI()
+    {
+        GUI.Label(new Rect(10, 10, Screen.width, Screen.height), $"_stateMachine.currentState: {playerMovementStateMachine.CurrentState}\n" +
+                                                                 $"_stateMachine.Velocity: {playerMovementStateMachine.Velocity}\n" +
+                                                                 $"_stateMachine.MoveDir: {playerMovementStateMachine.MoveDir}\n" +
+                                                                 $"_stateMachine.XValue: {playerMovementStateMachine.XValue}\n");
+    }
     
     [Serializable]
     private class PlayerMovementStateMachine
@@ -157,6 +176,7 @@ public class Player : MonoBehaviour
         [SerializeField] private float velocityMultiplier;
         [SerializeField] private float maxRotationangle;
         [SerializeField, Min(0f)] private float dashCooldown;
+
         
         [Header("States parameters")]
         [SerializeField] private IdleMovementState idleState;
@@ -267,11 +287,7 @@ public class Player : MonoBehaviour
     {
         public override void Update(float deltaTime)
         {
-            if (_stateMachine.IsDashing)
-            {
-                _stateMachine.ChangeState(PlayerMovementStateType.Dashing);
-            }
-            else if (_stateMachine.MoveDir != 0)
+            if (_stateMachine.MoveDir != 0)
             {
                 _stateMachine.ChangeState(PlayerMovementStateType.Accelerating);
             }
@@ -295,7 +311,7 @@ public class Player : MonoBehaviour
         public override void Update(float deltaTime)
         {
             base.Update(deltaTime);
-            if (_stateMachine.IsDashing)
+            if (_stateMachine.IsDashing && _stateMachine.CurrentState != _stateMachine.DashingState)
             {
                 _stateMachine.ChangeState(PlayerMovementStateType.Dashing);
             }
@@ -425,13 +441,18 @@ public class Player : MonoBehaviour
                 _stateMachine.ChangeState(PlayerMovementStateType.Accelerating);
             }
         }
+        
 
         public override void StartState(PlayerMovementStateType previousState)
         {
             timerCount = 0;
             startMoveDir = _stateMachine.MoveDir;
             _player.IsInvicible = true;
-            onDashStart?.Invoke();
+            _stateMachine.ResetDashCooldown();
+            if ((GameManager.Instance.GamefeelActivation & GameManager.GAMEFEEL_ACTIVATION.Player) == GameManager.GAMEFEEL_ACTIVATION.Player)
+            {
+                onDashStart?.Invoke();
+            }
 
             Collider2D r = Physics2D.OverlapCircle(_player.transform.position, PerfectDodgeRadius, _dodgeLayer);
             if (r)
@@ -449,8 +470,10 @@ public class Player : MonoBehaviour
             _stateMachine.Velocity = 1f;
             _stateMachine.XValue = _stateMachine.MoveDir;
             _player.IsInvicible = false;
-            _stateMachine.ResetDashCooldown();
-            onDashEnd?.Invoke();
+            if ((GameManager.Instance.GamefeelActivation & GameManager.GAMEFEEL_ACTIVATION.Player) == GameManager.GAMEFEEL_ACTIVATION.Player)
+            {
+                onDashEnd?.Invoke();
+            }
         }
     }
 }

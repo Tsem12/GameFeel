@@ -24,6 +24,9 @@ public class MenuManager : MonoBehaviour
 
     public void OpenMenu(bool isOpen)
     {
+        if(GameManager.Instance._isGameOver)
+            return;
+        
         IsMenuOpen = isOpen;
         Time.timeScale = isOpen ? 0 : 1;
         canvasGroup.alpha = isOpen ? 1 : 0;
