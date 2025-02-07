@@ -56,7 +56,7 @@ public class Player : MonoBehaviour
         {
             MenuManager.Instance.OpenMenu(!MenuManager.Instance.IsMenuOpen);
         }
-        Debug.Log(playerMovementStateMachine.DashingState._dodgeParticule.isPlaying);
+        //Debug.Log(playerMovementStateMachine.DashingState._dodgeParticule.isPlaying);
     }
 
     private void OnDestroy()
@@ -319,7 +319,7 @@ public class Player : MonoBehaviour
         public override void Update(float deltaTime)
         {
             base.Update(deltaTime);
-            if (_stateMachine.IsDashing)
+            if (_stateMachine.IsDashing && _stateMachine.CurrentState != _stateMachine.DashingState)
             {
                 _stateMachine.ChangeState(PlayerMovementStateType.Dashing);
             }
@@ -458,7 +458,6 @@ public class Player : MonoBehaviour
             startMoveDir = _stateMachine.MoveDir;
             _player.IsInvicible = true;
             onDashStart?.Invoke();
-
             if ((GameManager.Instance.GamefeelActivation & GameManager.GAMEFEEL_ACTIVATION.Player) == GameManager.GAMEFEEL_ACTIVATION.Player)
             {
                 _dodgeParticule.Play();
