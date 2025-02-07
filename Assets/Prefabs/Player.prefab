@@ -167,7 +167,7 @@ MonoBehaviour:
     - rid: 690608895612157953
       type: {class: MMF_TimescaleModifier, ns: MoreMountains.Feedbacks, asm: MoreMountains.Feedbacks}
       data:
-        Active: 1
+        Active: 0
         UniqueID: -1799782690
         Label: Timescale Modifier
         ChannelMode: 0
@@ -301,7 +301,7 @@ MonoBehaviour:
     - rid: 690608895612157954
       type: {class: MMF_AudioSourcePitch, ns: MoreMountains.Feedbacks, asm: MoreMountains.Feedbacks}
       data:
-        Active: 1
+        Active: 0
         UniqueID: 857702645
         Label: AudioSource Pitch
         ChannelMode: 0
@@ -408,7 +408,7 @@ MonoBehaviour:
     - rid: 8820702425083019268
       type: {class: MMF_DebugLog, ns: MoreMountains.Feedbacks, asm: MoreMountains.Feedbacks.MMTools}
       data:
-        Active: 1
+        Active: 0
         UniqueID: 1229387627
         Label: Log
         ChannelMode: 0
@@ -480,7 +480,7 @@ MonoBehaviour:
     - rid: 8820702425083019271
       type: {class: MMF_ChromaticAberration_URP, ns: MoreMountains.FeedbacksForThirdParty, asm: MoreMountains.Feedbacks.URP}
       data:
-        Active: 1
+        Active: 0
         UniqueID: -1452652136
         Label: Chromatic Aberration URP
         ChannelMode: 0
@@ -588,7 +588,7 @@ MonoBehaviour:
     - rid: 8820702425083019277
       type: {class: MMF_LensDistortion_URP, ns: MoreMountains.FeedbacksForThirdParty, asm: MoreMountains.Feedbacks.URP}
       data:
-        Active: 1
+        Active: 0
         UniqueID: -25137490
         Label: Lens Distortion URP
         ChannelMode: 0
@@ -695,7 +695,7 @@ MonoBehaviour:
     - rid: 8820702444953796608
       type: {class: MMF_WhiteBalance_URP, ns: MoreMountains.FeedbacksForThirdParty, asm: MoreMountains.Feedbacks.URP}
       data:
-        Active: 1
+        Active: 0
         UniqueID: 1551027740
         Label: White Balance URP
         ChannelMode: 0
@@ -989,6 +989,7 @@ MonoBehaviour:
   DebugActive: 0
   FeedbacksList:
   - rid: 690608895612157952
+  - rid: 2413919661871595529
   KeepPlayModeChanges: 0
   PerformanceMode: 0
   ForceStopFeedbacksOnDisable: 1
@@ -1071,6 +1072,177 @@ MonoBehaviour:
         WiggleRotationDuration: 0
         WiggleScale: 0
         WiggleScaleDuration: 0
+    - rid: 2413919661871595529
+      type: {class: MMF_MMSoundManagerSound, ns: MoreMountains.Feedbacks, asm: MoreMountains.Feedbacks.MMTools}
+      data:
+        Active: 0
+        UniqueID: -1212916337
+        Label: MMSoundManager Sound
+        ChannelMode: 0
+        Channel: 0
+        MMChannelDefinition: {fileID: 0}
+        Chance: 100
+        DisplayColor: {r: 0, g: 0, b: 0, a: 1}
+        Timing:
+          TimescaleMode: 0
+          ExcludeFromHoldingPauses: 0
+          ContributeToTotalDuration: 1
+          InitialDelay: 0
+          CooldownDuration: 0
+          InterruptsOnStop: 1
+          NumberOfRepeats: 0
+          RepeatForever: 0
+          DelayBetweenRepeats: 1
+          MMFeedbacksDirectionCondition: 0
+          PlayDirection: 0
+          ConstantIntensity: 1
+          UseIntensityInterval: 0
+          IntensityIntervalMin: 0
+          IntensityIntervalMax: 0
+          Sequence: {fileID: 0}
+          TrackID: 0
+          Quantized: 0
+          TargetBPM: 120
+        AutomatedTargetAcquisition:
+          Mode: 0
+          ChildIndex: 0
+        RandomizeOutput: 0
+        RandomMultiplier: {x: 0.8, y: 1}
+        RandomizeDuration: 0
+        RandomDurationMultiplier: {x: 0.5, y: 2}
+        UseRange: 0
+        RangeDistance: 5
+        UseRangeFalloff: 0
+        RangeFalloff:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 0
+            value: 1
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          - serializedVersion: 3
+            time: 1
+            value: 0
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+        RemapRangeFalloff: {x: 0, y: 1}
+        Owner: {fileID: 4907151178442202275}
+        DebugActive: 0
+        Sfx: {fileID: 8300000, guid: 434f3fa655277fe41a85ea8ed3c8480f, type: 3}
+        RandomSfx: []
+        SequentialOrder: 0
+        SequentialOrderHoldLast: 0
+        SequentialOrderHoldCooldownDuration: 2
+        MinVolume: 2
+        MaxVolume: 2
+        MinPitch: 1.2
+        MaxPitch: 1.2
+        PlaybackTime: {x: 0, y: 0}
+        MmSoundManagerTrack: 0
+        ID: 5
+        AudioGroup: {fileID: 0}
+        RecycleAudioSource: {fileID: 0}
+        Loop: 1
+        Persistent: 0
+        DoNotPlayIfClipAlreadyPlaying: 0
+        StopSoundOnFeedbackStop: 1
+        Fade: 0
+        FadeInitialVolume: 0
+        FadeDuration: 1
+        FadeTween:
+          MMTweenDefinitionType: 0
+          MMTweenCurve: 9
+          Curve:
+            serializedVersion: 2
+            m_Curve:
+            - serializedVersion: 3
+              time: 0
+              value: 0
+              inSlope: 0
+              outSlope: 0
+              tangentMode: 0
+              weightedMode: 0
+              inWeight: 0
+              outWeight: 0
+            - serializedVersion: 3
+              time: 1
+              value: 1
+              inSlope: 0
+              outSlope: 0
+              tangentMode: 0
+              weightedMode: 0
+              inWeight: 0
+              outWeight: 0
+            m_PreInfinity: 2
+            m_PostInfinity: 2
+            m_RotationOrder: 4
+          Initialized: 0
+        SoloSingleTrack: 0
+        SoloAllTracks: 0
+        AutoUnSoloOnEnd: 0
+        PanStereo: 0
+        SpatialBlend: 0
+        AttachToTransform: {fileID: 0}
+        BypassEffects: 0
+        BypassListenerEffects: 0
+        BypassReverbZones: 0
+        Priority: 128
+        ReverbZoneMix: 1
+        DopplerLevel: 1
+        Spread: 0
+        RolloffMode: 0
+        MinDistance: 1
+        MaxDistance: 500
+        UseCustomRolloffCurve: 0
+        CustomRolloffCurve:
+          serializedVersion: 2
+          m_Curve: []
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+        UseSpatialBlendCurve: 0
+        SpatialBlendCurve:
+          serializedVersion: 2
+          m_Curve: []
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+        UseReverbZoneMixCurve: 0
+        ReverbZoneMixCurve:
+          serializedVersion: 2
+          m_Curve: []
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+        UseSpreadCurve: 0
+        SpreadCurve:
+          serializedVersion: 2
+          m_Curve: []
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+        DrawGizmos: 0
+        GizmosCenter: {fileID: 0}
+        MinDistanceColor: {r: 0.37254903, g: 0.61960787, b: 0.627451, a: 1}
+        MaxDistanceColor: {r: 1, g: 0.27058825, b: 0, a: 1}
+        TestPlayButton:
+          ButtonText: Debug Play Sound
+        TestStopButton:
+          ButtonText: Debug Stop Sound
+        ResetSequentialIndexButton:
+          ButtonText: Reset Sequential Index
 --- !u!1 &7682058843243954048
 GameObject:
   m_ObjectHideFlags: 0
@@ -1381,7 +1553,7 @@ GameObject:
   - component: {fileID: 4905715445761255719}
   - component: {fileID: 83178330223371602}
   - component: {fileID: 6567481879381926498}
-  - component: {fileID: 8927672376685216663}
+  - component: {fileID: 3116277247380385343}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -1679,7 +1851,7 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.3
---- !u!50 &8927672376685216663
+--- !u!50 &3116277247380385343
 Rigidbody2D:
   serializedVersion: 4
   m_ObjectHideFlags: 0
@@ -2127,10 +2299,6 @@ PrefabInstance:
       value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 483171319802029624, guid: 0740f251db6e8fa4894753ea110b1da3, type: 3}
-      propertyPath: playOnAwake
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 483171319802029624, guid: 0740f251db6e8fa4894753ea110b1da3, type: 3}
       propertyPath: InitialModule.startColor.maxColor.a
       value: 0.3254902
       objectReference: {fileID: 0}
@@ -2216,9 +2384,21 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5604199491577259468}
     m_Modifications:
+    - target: {fileID: 1654081692468311406, guid: 7bcbe96cdedfaf843b4db9b61582b1ed, type: 3}
+      propertyPath: m_SortingOrder
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4492304825604703794, guid: 7bcbe96cdedfaf843b4db9b61582b1ed, type: 3}
+      propertyPath: EmissionModule.rateOverTime.scalar
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 4492304825604703794, guid: 7bcbe96cdedfaf843b4db9b61582b1ed, type: 3}
+      propertyPath: EmissionModule.rateOverDistance.scalar
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8497587447931160135, guid: 7bcbe96cdedfaf843b4db9b61582b1ed, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: 4.47
       objectReference: {fileID: 0}
     - target: {fileID: 8497587447931160135, guid: 7bcbe96cdedfaf843b4db9b61582b1ed, type: 3}
       propertyPath: m_LocalPosition.y
